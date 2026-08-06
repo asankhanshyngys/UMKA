@@ -7,8 +7,14 @@ import {
     Difficulty,
     CourseStatus,
 } from "@/generated/prisma/client";
+import { getCurrentAdmin } from "@/lib/auth";
+
+async function ensureAdmin() {
+    if (!await getCurrentAdmin()) throw new Error("Unauthorized");
+}
 
 export async function deleteCourse(id:string) {
+    await ensureAdmin();
     await prisma.course.update({
 
         where:{
@@ -28,6 +34,7 @@ export async function deleteCourse(id:string) {
 
 
 export async function createCourse(formData: FormData){
+    await ensureAdmin();
 
 
     const title = formData.get("title") as string;

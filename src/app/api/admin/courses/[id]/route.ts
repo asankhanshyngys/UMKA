@@ -1,15 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export async function GET(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await getCurrentAdmin()) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const { id } = await params;
 
-    const course = await prisma.course.findUnique({
+    const course = await prisma.course.findFirst({
         where: {
             id,
+            deletedAt: null,
         },
         include: {
             instructor: true,
@@ -32,6 +35,7 @@ export async function PATCH(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await getCurrentAdmin()) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const { id } = await params;
 
     const body = await request.json();
@@ -50,12 +54,14 @@ export async function DELETE(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await getCurrentAdmin()) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const { id } = await params;
 
-    await prisma.course.delete({
+    await prisma.course.update({
         where: {
             id,
         },
+        data: { deletedAt: new Date() },
     });
 
     return NextResponse.json({

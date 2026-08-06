@@ -10,6 +10,7 @@ export async function GET() {
 
             where: {
                 status: "PUBLISHED",
+                deletedAt: null,
             },
 
             include: {
@@ -44,7 +45,7 @@ export async function GET() {
         return NextResponse.json(courses);
 
 
-    } catch(error) {
+    } catch {
 
 
         return NextResponse.json(

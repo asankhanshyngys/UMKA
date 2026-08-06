@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-
-const MOCK_USER_ID = "student-demo-id";
+import { getCurrentUser } from "@/lib/auth";
 
 
 export async function GET(
@@ -75,23 +73,29 @@ export async function GET(
 
 
 
-    const purchases = await prisma.coursePurchase.findFirst({
+    const user = await getCurrentUser();
+    const now = new Date();
+    const purchases = user ? await prisma.coursePurchase.findFirst({
 
         where: {
 
-            userId: MOCK_USER_ID,
+            userId: user.id,
 
             courseId: id,
 
             status: "COMPLETED",
 
+            expiresAt: { gt: now },
         },
+    }) : null;
 
-    });
+    const subscription = user ? await prisma.subscription.findFirst({
+        where: { userId: user.id, status: "ACTIVE", expiresAt: { gt: now } },
+    }) : null;
 
 
 
-    const hasAccess = Boolean(purchases);
+    const hasAccess = user?.role === "ADMIN" || Boolean(purchases) || Boolean(subscription);
 
 
 

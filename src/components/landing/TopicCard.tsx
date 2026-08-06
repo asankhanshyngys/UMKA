@@ -1,6 +1,5 @@
 import Link from "next/link";
-import type { Topic } from "@/types/course";
-import { formatPrice } from "@/data/mockData";
+import type { CatalogCourse } from "@/features/catalog/types";
 
 const thumbnailColors = {
   mustard: "bg-thumbnail-mustard",
@@ -8,21 +7,20 @@ const thumbnailColors = {
   forest: "bg-thumbnail-forest",
 } as const;
 
-interface TopicCardProps {
-  topic: Topic;
-}
+interface TopicCardProps { course: CatalogCourse; }
 
-export function TopicCard({ topic }: TopicCardProps) {
+export function TopicCard({ course }: TopicCardProps) {
+  const videoCount = course.modules.reduce((total, module) => total + module.videos.length, 0);
   return (
-    <Link href={`/topics/${topic.id}`} className="group block">
+    <Link href={`/courses/${course.id}`} className="group block">
       <article className="overflow-hidden rounded-2xl bg-card transition-transform group-hover:-translate-y-0.5">
         <div
-          className={`aspect-[4/3] rounded-2xl ${thumbnailColors[topic.thumbnailColor]}`}
+          className={`aspect-[4/3] rounded-2xl ${thumbnailColors.mustard}`}
         />
         <div className="px-1 py-4">
-          <h3 className="text-sm font-semibold text-foreground">{topic.title}</h3>
+          <h3 className="text-sm font-semibold text-foreground">{course.title}</h3>
           <p className="mt-1 text-xs text-foreground-subtle">
-            {topic.videos.length} видео · от {formatPrice(topic.price)} / мес.
+            {videoCount} видео · {course.price.toLocaleString("ru-RU")} ₸ · {course.difficulty.replaceAll("_", " ")}
           </p>
         </div>
       </article>

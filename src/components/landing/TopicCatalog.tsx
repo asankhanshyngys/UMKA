@@ -1,11 +1,11 @@
-import type { Topic } from "@/types/course";
+import type { CatalogCourse } from "@/features/catalog/types";
 import { TopicCard } from "./TopicCard";
 
 interface TopicCatalogProps {
-  topics: Topic[];
+  courses: CatalogCourse[];
 }
 
-export function TopicCatalog({ topics }: TopicCatalogProps) {
+export function TopicCatalog({ courses }: TopicCatalogProps) {
   return (
     <section id="catalog" className="mx-auto max-w-6xl px-6 py-20">
       <div className="mb-10 space-y-3">
@@ -21,8 +21,8 @@ export function TopicCatalog({ topics }: TopicCatalogProps) {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {topics.map((topic) => (
-          <TopicCard key={topic.id} topic={topic} />
+        {courses.map((course) => (
+          <TopicCard key={course.id} course={course} />
         ))}
       </div>
     </section>

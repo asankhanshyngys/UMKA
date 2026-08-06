@@ -2,14 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 
-const protectedRoutes = [
-    "/dashboard",
-    "/courses",
-    "/profile",
-    "/admin",
-];
-
-
 const secret = new TextEncoder().encode(
     process.env.JWT_SECRET
 );

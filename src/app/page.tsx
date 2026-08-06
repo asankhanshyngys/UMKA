@@ -2,9 +2,22 @@ import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/landing/Hero";
 import { SubscriptionPlans } from "@/components/landing/SubscriptionPlans";
 import { TopicCatalog } from "@/components/landing/TopicCatalog";
-import { subscriptionPlans, topics } from "@/data/mockData";
+import { subscriptionPlans } from "@/data/mockData";
+import { getPublishedCourses } from "@/features/catalog/server";
+import type { CatalogCourse } from "@/features/catalog/types";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  let courses: CatalogCourse[] = [];
+  let catalogUnavailable = false;
+
+  try {
+    courses = await getPublishedCourses();
+  } catch (error) {
+    console.error("Could not load the public course catalog", error);
+    catalogUnavailable = true;
+  }
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -16,7 +29,13 @@ export default function Home() {
       <div className="mx-auto max-w-6xl px-6">
         <hr className="border-border" />
       </div>
-      <TopicCatalog topics={topics} />
+      {catalogUnavailable ? (
+        <section className="mx-auto max-w-6xl px-6 py-20">
+          <p className="text-foreground-muted">Каталог временно недоступен. Проверьте подключение к базе данных.</p>
+        </section>
+      ) : (
+        <TopicCatalog courses={courses} />
+      )}
     </div>
   );
 }

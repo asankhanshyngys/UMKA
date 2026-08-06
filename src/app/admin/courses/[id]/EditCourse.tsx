@@ -5,22 +5,10 @@ import Link from "next/link";
 import { Course } from "@/generated/prisma/client";
 
 
-type CourseWithRelations = Course & {
-    category: {
-        id: string;
-        name: string;
-    };
-
-    instructor: {
-        id: string;
-        name: string;
-    };
-};
-
 export default function EditCourse({
                                        course,
                                    }: {
-    course: CourseWithRelations
+    course: Course
 }){
 
     return (

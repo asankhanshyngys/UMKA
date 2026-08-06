@@ -30,11 +30,26 @@ export async function POST(request: Request) {
 
         }
 
+        if (
+            typeof email !== "string" ||
+            typeof name !== "string" ||
+            typeof password !== "string" ||
+            password.length < 8
+        ) {
+            return NextResponse.json(
+                { error: "Введите корректные данные. Пароль должен содержать минимум 8 символов." },
+                { status: 400 }
+            );
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
+        const normalizedName = name.trim();
+
 
         const existingUser = await prisma.user.findUnique({
 
             where:{
-                email
+                email: normalizedEmail
             }
 
         });
@@ -64,9 +79,9 @@ export async function POST(request: Request) {
 
             data:{
 
-                email,
+                email: normalizedEmail,
 
-                name,
+                name: normalizedName,
 
                 password: hashedPassword,
 
@@ -99,9 +114,10 @@ export async function POST(request: Request) {
             token,
             {
                 httpOnly:true,
-                secure:false,
+                secure: process.env.NODE_ENV === "production",
                 sameSite:"lax",
-                maxAge:60*60*24*7
+                maxAge:60*60*24*7,
+                path: "/"
             }
         );
 
@@ -110,7 +126,7 @@ export async function POST(request: Request) {
 
 
 
-    } catch(error){
+    } catch {
 
         return NextResponse.json(
             {

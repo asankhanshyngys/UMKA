@@ -6,12 +6,14 @@ import {
     Difficulty,
     CourseStatus,
 } from "@/generated/prisma/client";
+import { getCurrentAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export async function updateCourse(
     id: string,
     formData: FormData
 ) {
+    if (!await getCurrentAdmin()) throw new Error("Unauthorized");
 
     const title =
         formData.get("title") as string;

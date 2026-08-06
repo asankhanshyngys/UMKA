@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export async function GET() {
+    if (!await getCurrentAdmin()) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const courses = await prisma.course.findMany({
         include: {
             instructor: true,
@@ -16,6 +18,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    if (!await getCurrentAdmin()) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const body = await req.json();
 

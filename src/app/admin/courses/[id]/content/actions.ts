@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentAdmin } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 
@@ -8,6 +9,7 @@ export async function createModule(
     courseId: string,
     formData: FormData
 ) {
+    if (!await getCurrentAdmin()) throw new Error("Unauthorized");
 
     const title =
         formData.get("title") as string;
@@ -70,6 +72,7 @@ export async function deleteModule(
     moduleId: string,
     courseId: string
 ) {
+    if (!await getCurrentAdmin()) throw new Error("Unauthorized");
 
 
     await prisma.module.delete({

@@ -1,0 +1,86 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { getCurrentAdmin } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+async function ensureAdmin() {
+  if (!await getCurrentAdmin()) throw new Error("Unauthorized");
+}
+
+function positiveNumber(value: FormDataEntryValue | null, field: string) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < 0) throw new Error(`${field} must be a positive number.`);
+  return number;
+}
+
+export async function updateModule(moduleId: string, courseId: string, formData: FormData) {
+  await ensureAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) throw new Error("Module title is required.");
+
+  await prisma.module.update({
+    where: { id: moduleId },
+    data: {
+      title,
+      description: String(formData.get("description") ?? "").trim() || null,
+      price: positiveNumber(formData.get("price"), "Price"),
+    },
+  });
+
+  revalidatePath(`/admin/modules/${moduleId}`);
+  revalidatePath(`/admin/courses/${courseId}/content`);
+}
+
+export async function createVideo(moduleId: string, courseId: string, formData: FormData) {
+  await ensureAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  const storageKey = String(formData.get("storageKey") ?? "").trim();
+  if (!title || !storageKey) throw new Error("Video title and storage key are required.");
+
+  const previous = await prisma.video.findFirst({ where: { moduleId }, orderBy: { order: "desc" } });
+  await prisma.video.create({
+    data: {
+      title,
+      storageKey,
+      description: String(formData.get("description") ?? "").trim() || null,
+      duration: positiveNumber(formData.get("duration"), "Duration"),
+      price: positiveNumber(formData.get("price"), "Price"),
+      isFreePreview: formData.get("isFreePreview") === "on",
+      order: (previous?.order ?? 0) + 1,
+      moduleId,
+    },
+  });
+
+  revalidatePath(`/admin/modules/${moduleId}`);
+  revalidatePath(`/admin/courses/${courseId}/content`);
+}
+
+export async function updateVideo(videoId: string, moduleId: string, courseId: string, formData: FormData) {
+  await ensureAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  const storageKey = String(formData.get("storageKey") ?? "").trim();
+  if (!title || !storageKey) throw new Error("Video title and storage key are required.");
+
+  await prisma.video.update({
+    where: { id: videoId },
+    data: {
+      title,
+      storageKey,
+      description: String(formData.get("description") ?? "").trim() || null,
+      duration: positiveNumber(formData.get("duration"), "Duration"),
+      price: positiveNumber(formData.get("price"), "Price"),
+      isFreePreview: formData.get("isFreePreview") === "on",
+    },
+  });
+
+  revalidatePath(`/admin/modules/${moduleId}`);
+  revalidatePath(`/admin/courses/${courseId}/content`);
+}
+
+export async function deleteVideo(videoId: string, moduleId: string, courseId: string) {
+  await ensureAdmin();
+  await prisma.video.update({ where: { id: videoId }, data: { deletedAt: new Date() } });
+  revalidatePath(`/admin/modules/${moduleId}`);
+  revalidatePath(`/admin/courses/${courseId}/content`);
+}

@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UMKA English
 
-## Getting Started
+UMKA is a Russian-language English-learning platform. Learners can browse courses, buy access or subscribe, and study structured modules and video lessons. Administrators manage courses and modules from `/admin`.
 
-First, run the development server:
+## Project structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- `src/app` — Next.js pages and HTTP route handlers.
+- `src/components` — reusable presentation components.
+- `src/features/catalog` — catalog-specific types and database queries.
+- `src/lib` — shared infrastructure, including Prisma and authentication.
+- `prisma` — database schema, migrations, and seed data.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This is a single Next.js application. Features are separated into modules inside `src`, rather than independent npm packages, because they share the same database, authentication, and deployment lifecycle.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Local setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Copy `.env.example` to `.env` and set a PostgreSQL `DATABASE_URL` and a strong `JWT_SECRET`.
+2. Install dependencies: `npm ci`.
+3. Generate Prisma client: `npx prisma generate`.
+4. Run migrations: `npx prisma migrate deploy`.
+5. Optionally seed development data: `npx prisma db seed`.
+6. Start the app: `npm run dev`.
 
-## Learn More
+## Checks
 
-To learn more about Next.js, take a look at the following resources:
+Run `npm run lint` before committing and `npm run build` before deployment.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Security model
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Auth cookies are HTTP-only and secure in production.
+- `/admin` requires an account with the `ADMIN` role.
+- Admin server actions and APIs check the role independently of the UI.
+- Learner course access is based on a valid course purchase, active subscription, or admin role.
