@@ -1,0 +1,575 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =====================
+// ENUMS
+// =====================
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Difficulty {
+  BEGINNER
+  ELEMENTARY
+  INTERMEDIATE
+  UPPER_INTERMEDIATE
+  ADVANCED
+}
+
+enum SubscriptionPlan {
+  ONE_MONTH
+  THREE_MONTHS
+  SIX_MONTHS
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  FILL_BLANK
+  MATCHING
+  SHORT_TEXT
+}
+
+enum ResourceType {
+  PDF
+  AUDIO
+  IMAGE
+  DOCUMENT
+}
+
+enum EventType {
+  COURSE_OPENED
+  VIDEO_STARTED
+  VIDEO_COMPLETED
+  PRACTICE_STARTED
+  PRACTICE_COMPLETED
+}
+
+// =====================
+// USERS
+// =====================
+
+model User {
+  id String @id @default(uuid())
+
+  email String @unique
+
+  name String
+
+  password String
+
+  avatarUrl String?
+
+  role UserRole @default(USER)
+
+  subscriptions Subscription[]
+
+  coursePurchases CoursePurchase[]
+
+  modulePurchases ModulePurchase[]
+
+  videoPurchases VideoPurchase[]
+
+  videoProgress VideoProgress[]
+
+  watchHistory WatchHistory[]
+
+  practiceResults PracticeResult[]
+
+  certificates Certificate[]
+
+  events Event[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================
+// INSTRUCTOR
+// =====================
+
+model Instructor {
+  id String @id @default(uuid())
+
+  name String
+
+  bio String?
+
+  avatarUrl String?
+
+  courses Course[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================
+// CATEGORY
+// =====================
+
+model Category {
+  id String @id @default(uuid())
+
+  name String @unique
+
+  description String?
+
+  courses Course[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================
+// COURSE
+// =====================
+
+model Course {
+  id String @id @default(uuid())
+
+  title String
+
+  slug String @unique
+
+  description String
+
+  thumbnail String?
+
+  price Int
+
+  difficulty Difficulty
+
+  status CourseStatus @default(DRAFT)
+
+  instructorId String
+
+  instructor Instructor @relation(fields: [instructorId], references: [id])
+
+  categoryId String
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  modules Module[]
+
+  purchases    CoursePurchase[]
+  certificates Certificate[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+}
+
+// =====================
+// MODULE
+// =====================
+
+model Module {
+  id String @id @default(uuid())
+
+  title String
+
+  description String?
+
+  price Int
+
+  order Int
+
+  courseId String
+
+  course Course @relation(fields: [courseId], references: [id])
+
+  videos Video[]
+
+  resources Resource[]
+
+  practices Practice[]
+
+  purchases ModulePurchase[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+}
+
+// =====================
+// VIDEO
+// =====================
+
+model Video {
+  id String @id @default(uuid())
+
+  title String
+
+  description String?
+
+  storageKey String
+
+  previewImage String?
+
+  duration Int
+
+  price Int
+
+  order Int
+
+  isFreePreview Boolean @default(false)
+
+  moduleId String
+
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  progress VideoProgress[]
+
+  history WatchHistory[]
+
+  purchases VideoPurchase[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
+}
+
+// =====================
+// RESOURCES
+// =====================
+
+model Resource {
+  id String @id @default(uuid())
+
+  title String
+
+  type ResourceType
+
+  storageKey String
+
+  moduleId String
+
+  module Module @relation(fields: [moduleId], references: [id],onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================
+// PRACTICE
+// =====================
+
+model Practice {
+  id String @id @default(uuid())
+
+  title String
+
+  moduleId String
+
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  sections PracticeSection[]
+
+  results PracticeResult[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+model PracticeSection {
+  id String @id @default(uuid())
+
+  title String
+
+  practiceId String
+
+  practice Practice @relation(fields: [practiceId], references: [id],onDelete: Cascade)
+
+  questions Question[]
+
+  order Int
+}
+
+model Question {
+  id String @id @default(uuid())
+
+  text String
+
+  type QuestionType
+
+  sectionId String
+
+  section PracticeSection @relation(fields: [sectionId], references: [id],onDelete: Cascade)
+
+  answers Answer[]
+}
+
+model Answer {
+  id String @id @default(uuid())
+
+  text String
+
+  correct Boolean
+
+  questionId String
+
+  question Question @relation(fields: [questionId], references: [id],onDelete: Cascade)
+}
+
+// =====================
+// SUBSCRIPTIONS
+// =====================
+
+model Subscription {
+  id String @id @default(uuid())
+
+  userId String
+
+  plan SubscriptionPlan
+
+  price Int
+
+  status SubscriptionStatus
+
+  startsAt DateTime
+
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// =====================
+// PURCHASES
+// =====================
+
+model CoursePurchase {
+  id String @id @default(uuid())
+
+  userId String
+
+  courseId String
+
+  price Int
+
+  status PurchaseStatus
+
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  course Course @relation(fields: [courseId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model ModulePurchase {
+  id String @id @default(uuid())
+
+  userId String
+
+  moduleId String
+
+  price Int
+
+  status PurchaseStatus
+
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  module Module @relation(fields: [moduleId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model VideoPurchase {
+  id String @id @default(uuid())
+
+  userId String
+
+  videoId String
+
+  price Int
+
+  status PurchaseStatus
+
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  video Video @relation(fields: [videoId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// =====================
+// PROGRESS
+// =====================
+
+model VideoProgress {
+  id String @id @default(uuid())
+
+  userId String
+
+  videoId String
+
+  completed Boolean @default(false)
+
+  lastPosition Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+
+  video Video @relation(fields: [videoId], references: [id])
+
+  @@unique([userId, videoId])
+}
+
+model WatchHistory {
+  id String @id @default(uuid())
+
+  userId String
+
+  videoId String
+
+  lastPosition Int @default(0)
+
+  watchedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  video Video @relation(fields: [videoId], references: [id])
+}
+
+// =====================
+// CERTIFICATES
+// =====================
+
+model Certificate {
+  id String @id @default(uuid())
+
+  userId String
+
+  courseId String
+
+  issuedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  course Course @relation(fields: [courseId], references: [id])
+}
+
+// =====================
+// PAYMENTS
+// =====================
+model PracticeResult {
+  id String @id @default(uuid())
+
+  userId String
+
+  practiceId String
+
+  score Int
+
+  completed Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+
+  practice Practice @relation(fields: [practiceId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, practiceId])
+}
+
+model Payment {
+  id String @id @default(uuid())
+
+  userId String
+
+  amount Int
+
+  status PaymentStatus
+
+  provider String
+
+  transactionId String?
+
+  createdAt DateTime @default(now())
+}
+
+// =====================
+// SETTINGS
+// =====================
+
+model PlatformSettings {
+  id String @id @default(uuid())
+
+  oneMonthSubscription Int
+
+  threeMonthSubscription Int
+
+  sixMonthSubscription Int
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================
+// EVENTS
+// =====================
+
+model Event {
+  id String @id @default(uuid())
+
+  userId String
+
+  type EventType
+
+  metadata Json?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
