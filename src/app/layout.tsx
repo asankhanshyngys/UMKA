@@ -1,20 +1,33 @@
 import type { Metadata } from "next";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { AppProviders } from "@/components/providers/AppProviders";
+import type { Locale } from "@/i18n/routing";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "УМКА — Английский язык",
-  description:
-    "Изучайте английский по подписке или покупайте отдельные темы и видеоуроки.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
 
-export default function RootLayout({
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = (await getLocale()) as Locale;
+  const messages = await getMessages();
+
   return (
-    <html lang="ru" className="h-full antialiased">
-      <body className="min-h-full bg-background font-sans">{children}</body>
+    <html lang={locale} className="h-full antialiased" suppressHydrationWarning>
+      <body className="min-h-full bg-background font-sans text-foreground">
+        <AppProviders locale={locale} messages={messages}>
+          {children}
+        </AppProviders>
+      </body>
     </html>
   );
 }

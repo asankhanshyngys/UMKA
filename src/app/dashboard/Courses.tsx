@@ -1,12 +1,49 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
-type Course = { id: string; title: string; description: string; instructor: { name: string } };
+type Course = {
+  id: string;
+  title: string;
+  description: string;
+  instructor: { name: string };
+  progress: {
+    totalVideos: number;
+    completedVideos: number;
+    totalPractices: number;
+    completedPractices: number;
+    averageScore: number | null;
+  };
+};
+
+type StandaloneLesson = {
+  id: string;
+  title: string;
+  duration: number;
+  course: { id: string; title: string };
+  expiresAt: string;
+  progress: {
+    totalPractices: number;
+    completedPractices: number;
+    averageScore: number | null;
+  };
+};
+
+type PurchasedModule = {
+  id: string;
+  title: string;
+  course: { id: string; title: string };
+  expiresAt: string;
+  progress: StandaloneLesson["progress"];
+};
 
 export default function Courses() {
+  const t = useTranslations("dashboard");
   const [courses, setCourses] = useState<Course[]>([]);
+  const [standaloneLessons, setStandaloneLessons] = useState<StandaloneLesson[]>([]);
+  const [purchasedModules, setPurchasedModules] = useState<PurchasedModule[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -15,39 +52,130 @@ export default function Courses() {
       try {
         const response = await fetch("/api/dashboard/courses");
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error ?? "Не удалось загрузить курсы.");
+        if (!response.ok) throw new Error(data.error ?? t("loadError"));
         setCourses(data.courses ?? []);
+        setStandaloneLessons(data.standaloneLessons ?? []);
+        setPurchasedModules(data.purchasedModules ?? []);
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : "Не удалось загрузить курсы.");
+        setError(loadError instanceof Error ? loadError.message : t("loadError"));
       } finally {
         setIsLoading(false);
       }
     }
     loadCourses();
-  }, []);
+  }, [t]);
 
   return (
     <section className="mt-10">
-      <h2 className="font-serif text-2xl text-foreground">Мои курсы</h2>
-      {isLoading && <p className="mt-4 text-foreground-muted">Загружаем курсы…</p>}
-      {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-      {!isLoading && !error && courses.length === 0 && (
+      <h2 className="font-serif text-2xl text-foreground">{t("myCourses")}</h2>
+
+      {isLoading && <p className="mt-4 text-foreground-muted">{t("loading")}</p>}
+
+      {error && (
+        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300">
+          {error}
+        </p>
+      )}
+
+      {!isLoading && !error && courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && (
         <div className="mt-5 rounded-2xl border border-border bg-card p-6">
-          <h3 className="text-lg font-semibold text-foreground">У вас пока нет курсов</h3>
-          <p className="mt-2 text-foreground-muted">Выберите курс в каталоге, чтобы начать изучать английский.</p>
-          <Link href="/#catalog" className="mt-4 inline-block rounded-lg bg-accent px-4 py-2 text-white">Открыть каталог</Link>
+          <h3 className="text-lg font-semibold text-foreground">{t("emptyTitle")}</h3>
+          <p className="mt-2 text-foreground-muted">{t("emptyDescription")}</p>
+          <Link href="/#catalog" className="mt-4 inline-block rounded-lg bg-accent px-4 py-2 text-white">
+            {t("openCatalog")}
+          </Link>
         </div>
       )}
+
       {!isLoading && !error && courses.length > 0 && (
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          {courses.map((course) => (
-            <Link key={course.id} href={`/courses/${course.id}`} className="rounded-2xl border border-border bg-card p-5 transition-transform hover:-translate-y-0.5">
-              <h3 className="text-xl font-semibold text-foreground">{course.title}</h3>
-              <p className="mt-2 text-sm text-foreground-muted">{course.description}</p>
-              <p className="mt-4 text-sm text-foreground-subtle">Преподаватель: {course.instructor.name}</p>
-            </Link>
-          ))}
+          {courses.map((course) => {
+            const percent =
+              course.progress.totalPractices === 0
+                ? 0
+                : Math.round(
+                    (course.progress.completedPractices / course.progress.totalPractices) * 100,
+                  );
+
+            return (
+              <Link
+                key={course.id}
+                href={`/learn/${course.id}`}
+                className="rounded-2xl border border-border bg-card p-5 transition-transform hover:-translate-y-0.5"
+              >
+                <h3 className="text-xl font-semibold text-foreground">{course.title}</h3>
+                <p className="mt-2 text-sm text-foreground-muted">{course.description}</p>
+                <p className="mt-4 text-sm text-foreground-subtle">
+                  {t("instructor")}: {course.instructor.name}
+                </p>
+                <p className="mt-2 text-sm text-foreground-subtle">Lessons: {course.progress.completedVideos}/{course.progress.totalVideos}</p>
+                {course.progress.totalPractices > 0 && (
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs text-foreground-muted">
+                      <span>{t("practiceProgress")}</span>
+                      <span>
+                        {course.progress.completedPractices}/{course.progress.totalPractices}
+                        {course.progress.averageScore !== null
+                          ? ` · ${course.progress.averageScore}%`
+                          : ""}
+                      </span>
+                    </div>
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-background">
+                      <div className="h-full bg-accent" style={{ width: `${percent}%` }} />
+                    </div>
+                  </div>
+                )}
+              </Link>
+            );
+          })}
         </div>
+      )}
+
+      {!isLoading && !error && standaloneLessons.length > 0 && (
+        <>
+          <h2 className="mt-10 font-serif text-2xl text-foreground">{t("myLessons")}</h2>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+            {standaloneLessons.map((lesson) => (
+              <Link
+                key={lesson.id}
+                href={`/learn/video/${lesson.id}`}
+                className="rounded-2xl border border-border bg-card p-5 transition-transform hover:-translate-y-0.5"
+              >
+                <p className="text-xs text-foreground-subtle">{lesson.course.title}</p>
+                <h3 className="mt-1 text-xl font-semibold text-foreground">{lesson.title}</h3>
+                <p className="mt-2 text-sm text-foreground-muted">
+                  {Math.ceil(lesson.duration / 60)} {t("min")} · {t("expires")}{" "}
+                  {new Date(lesson.expiresAt).toLocaleDateString()}
+                </p>
+                {lesson.progress.totalPractices > 0 && (
+                  <p className="mt-4 text-sm text-foreground-subtle">
+                    {t("practice")}: {lesson.progress.completedPractices}/
+                    {lesson.progress.totalPractices}
+                    {lesson.progress.averageScore !== null
+                      ? ` · ${lesson.progress.averageScore}%`
+                      : ""}
+                  </p>
+                )}
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
+
+      {!isLoading && !error && purchasedModules.length > 0 && (
+        <>
+          <h2 className="mt-10 font-serif text-2xl text-foreground">My modules</h2>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+            {purchasedModules.map((courseModule) => (
+              <Link key={courseModule.id} href={`/learn/module/${courseModule.id}`} className="rounded-2xl border border-border bg-card p-5 transition-transform hover:-translate-y-0.5">
+                <p className="text-xs text-foreground-subtle">{courseModule.course.title}</p>
+                <h3 className="mt-1 text-xl font-semibold text-foreground">{courseModule.title}</h3>
+                <p className="mt-2 text-sm text-foreground-muted">{t("expires")} {new Date(courseModule.expiresAt).toLocaleDateString()}</p>
+                {courseModule.progress.totalPractices > 0 && <p className="mt-4 text-sm text-foreground-subtle">{t("practice")}: {courseModule.progress.completedPractices}/{courseModule.progress.totalPractices}{courseModule.progress.averageScore !== null ? ` · ${courseModule.progress.averageScore}%` : ""}</p>}
+              </Link>
+            ))}
+          </div>
+        </>
       )}
     </section>
   );

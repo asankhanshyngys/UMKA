@@ -1,104 +1,18 @@
-import { prisma } from "@/lib/prisma";
+/* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createVideo, deleteVideo, updateModule, updateVideo } from "./actions";
+import { prisma } from "@/lib/prisma";
+import { createVideo, deleteVideo, moveVideo, updateModule, updateVideo } from "./actions";
 
-export default async function ModulePage({
-                                             params,
-                                         }: {
-    params: Promise<{ id: string }>;
-}) {
+export default async function ModulePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const courseModule = await prisma.module.findUnique({ where: { id }, include: { videos: { where: { deletedAt: null }, orderBy: { order: "asc" } } } });
+  if (!courseModule) notFound();
 
-    const { id } = await params;
-
-    const courseModule = await prisma.module.findUnique({
-
-        where: {
-            id,
-        },
-
-        include: {
-            videos: { where: { deletedAt: null }, orderBy: { order: "asc" } },
-        },
-
-    });
-
-    if (!courseModule) {
-        notFound();
-    }
-
-    return (
-
-        <div className="p-10">
-
-            <h1 className="text-3xl font-bold">
-                {courseModule.title}
-            </h1>
-
-            <p className="mt-3">
-                {courseModule.description}
-            </p>
-
-            <p className="mt-2">
-                Price: {courseModule.price} ₸
-            </p>
-
-            <form action={updateModule.bind(null, courseModule.id, courseModule.courseId)} className="mt-6 grid max-w-xl gap-3">
-                <h2 className="text-xl font-semibold">Edit module</h2>
-                <input name="title" defaultValue={courseModule.title} className="border p-2" />
-                <textarea name="description" defaultValue={courseModule.description ?? ""} className="border p-2" />
-                <input name="price" type="number" min="0" defaultValue={courseModule.price} className="border p-2" />
-                <button className="w-fit rounded bg-black px-4 py-2 text-white">Save module</button>
-            </form>
-
-            <div className="mt-10">
-
-                <h2 className="text-2xl font-semibold">
-                    Videos
-                </h2>
-
-                <form action={createVideo.bind(null, courseModule.id, courseModule.courseId)} className="mt-5 grid max-w-xl gap-3 rounded border p-4">
-                    <h3 className="font-semibold">Add video</h3>
-                    <input name="title" placeholder="Video title" required className="border p-2" />
-                    <textarea name="description" placeholder="Description" className="border p-2" />
-                    <input name="storageKey" placeholder="Storage key or video path" required className="border p-2" />
-                    <input name="duration" type="number" min="0" placeholder="Duration in seconds" required className="border p-2" />
-                    <input name="price" type="number" min="0" placeholder="Price" required className="border p-2" />
-                    <label className="flex items-center gap-2"><input name="isFreePreview" type="checkbox" /> Free preview</label>
-                    <button className="w-fit rounded bg-black px-4 py-2 text-white">Add video</button>
-                </form>
-
-                {courseModule.videos.length === 0 ? (
-
-                    <p className="mt-4 text-gray-500">
-                        No videos yet.
-                    </p>
-
-                ) : (
-
-                    courseModule.videos.map(video => (
-
-                        <form
-                            key={video.id}
-                            action={updateVideo.bind(null, video.id, courseModule.id, courseModule.courseId)}
-                            className="mt-3 grid max-w-xl gap-3 rounded border p-4"
-                        >
-                            <input name="title" defaultValue={video.title} required className="border p-2" />
-                            <textarea name="description" defaultValue={video.description ?? ""} className="border p-2" />
-                            <input name="storageKey" defaultValue={video.storageKey} required className="border p-2" />
-                            <input name="duration" type="number" min="0" defaultValue={video.duration} required className="border p-2" />
-                            <input name="price" type="number" min="0" defaultValue={video.price} required className="border p-2" />
-                            <label className="flex items-center gap-2"><input name="isFreePreview" type="checkbox" defaultChecked={video.isFreePreview} /> Free preview</label>
-                            <div className="flex gap-3"><button className="rounded bg-black px-4 py-2 text-white">Save video</button><button formAction={deleteVideo.bind(null, video.id, courseModule.id, courseModule.courseId)} className="rounded border border-red-600 px-4 py-2 text-red-600">Delete</button></div>
-                        </form>
-
-                    ))
-
-                )}
-
-            </div>
-
-        </div>
-
-    );
-
+  return <div className="mx-auto max-w-4xl space-y-8 p-6 md:p-10"><Link href={`/admin/courses/${courseModule.courseId}/content`} className="text-sm text-accent underline">← Back to course content</Link><div><p className="text-sm text-foreground-subtle">Module {courseModule.order}</p><h1 className="mt-1 font-serif text-3xl font-bold">{courseModule.title}</h1></div>
+    <form action={updateModule.bind(null, courseModule.id, courseModule.courseId)} className="grid gap-3 rounded-2xl border border-border bg-card p-5"><h2 className="text-xl font-semibold">Edit module</h2><input required name="title" defaultValue={courseModule.title} className="rounded border border-border bg-background p-3" /><textarea name="description" defaultValue={courseModule.description ?? ""} className="min-h-24 rounded border border-border bg-background p-3" /><input required name="price" type="number" min="0" defaultValue={courseModule.price} className="rounded border border-border bg-background p-3" /><button className="w-fit rounded bg-accent px-4 py-2 text-white">Save module</button></form>
+    <section><h2 className="font-serif text-2xl font-semibold">Lessons</h2><form action={createVideo.bind(null, courseModule.id, courseModule.courseId)} className="mt-5 grid gap-3 rounded-2xl border border-border bg-card p-5"><h3 className="font-semibold">Add lesson</h3><input name="title" placeholder="Lesson title" required className="rounded border border-border bg-background p-3" /><textarea name="description" placeholder="Description" className="min-h-20 rounded border border-border bg-background p-3" /><input name="storageKey" placeholder="Cloudflare key or local video path" required className="rounded border border-border bg-background p-3" /><input name="previewImage" placeholder="Thumbnail image URL (optional)" className="rounded border border-border bg-background p-3" /><div className="grid gap-3 sm:grid-cols-2"><input name="duration" type="number" min="0" placeholder="Duration in seconds" required className="rounded border border-border bg-background p-3" /><input name="price" type="number" min="0" placeholder="Price" required className="rounded border border-border bg-background p-3" /></div><label className="flex items-center gap-2 text-sm"><input name="isFreePreview" type="checkbox" /> Free preview</label><button className="w-fit rounded bg-accent px-4 py-2 text-white">Add lesson</button></form>
+      <div className="mt-5 space-y-4">{courseModule.videos.length === 0 ? <p className="rounded-xl border border-dashed border-border p-6 text-center text-foreground-muted">No lessons yet.</p> : courseModule.videos.map((video, index) => <form key={video.id} action={updateVideo.bind(null, video.id, courseModule.id, courseModule.courseId)} className="grid gap-3 rounded-2xl border border-border bg-card p-5"><div className="flex items-start justify-between gap-4"><div><p className="text-xs text-foreground-subtle">Lesson {video.order}</p><h3 className="font-semibold">{video.title}</h3></div><div className="flex gap-1"><button formAction={moveVideo.bind(null, video.id, courseModule.id, courseModule.courseId, "up")} disabled={index === 0} className="rounded border border-border px-3 py-1 disabled:opacity-30">↑</button><button formAction={moveVideo.bind(null, video.id, courseModule.id, courseModule.courseId, "down")} disabled={index === courseModule.videos.length - 1} className="rounded border border-border px-3 py-1 disabled:opacity-30">↓</button></div></div>{video.previewImage && <img src={video.previewImage} alt="Lesson thumbnail preview" className="aspect-video w-full max-w-sm rounded-lg object-cover" />}<input name="title" defaultValue={video.title} required className="rounded border border-border bg-background p-3" /><textarea name="description" defaultValue={video.description ?? ""} className="min-h-20 rounded border border-border bg-background p-3" /><input name="storageKey" defaultValue={video.storageKey} required className="rounded border border-border bg-background p-3" /><input name="previewImage" defaultValue={video.previewImage ?? ""} placeholder="Thumbnail image URL (optional)" className="rounded border border-border bg-background p-3" /><div className="grid gap-3 sm:grid-cols-2"><input name="duration" type="number" min="0" defaultValue={video.duration} required className="rounded border border-border bg-background p-3" /><input name="price" type="number" min="0" defaultValue={video.price} required className="rounded border border-border bg-background p-3" /></div><label className="flex items-center gap-2 text-sm"><input name="isFreePreview" type="checkbox" defaultChecked={video.isFreePreview} /> Free preview</label><div className="flex flex-wrap gap-3"><button className="rounded bg-accent px-4 py-2 text-white">Save lesson</button><Link href={`/admin/videos/${video.id}/practice`} className="rounded border border-border px-4 py-2">Practice tasks</Link><button formAction={deleteVideo.bind(null, video.id, courseModule.id, courseModule.courseId)} className="rounded border border-red-600 px-4 py-2 text-red-600">Delete</button></div></form>)}</div>
+    </section>
+  </div>;
 }

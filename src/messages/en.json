@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "title": "UMKA — English Language",
+    "description": "Learn English by subscription or buy individual topics and video lessons."
+  },
+  "common": {
+    "brand": "UMKA",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "videos": "videos",
+    "month": "month",
+    "months2": "months",
+    "months5": "months"
+  },
+  "header": {
+    "subscriptions": "Subscriptions",
+    "courses": "Courses",
+    "login": "Sign in",
+    "register": "Sign up",
+    "signOut": "Sign out"
+  },
+  "hero": {
+    "eyebrow": "English · By subscription",
+    "title": "Learn English at your own pace.",
+    "description": "A subscription gives you access to all video lessons. Or pick a single topic or one video — access for 1 month.",
+    "ctaSubscription": "Choose a plan",
+    "ctaTopics": "Browse topics",
+    "playVideo": "Play video"
+  },
+  "subscriptions": {
+    "eyebrow": "Subscriptions",
+    "title": "Full access to all lessons",
+    "description": "Subscribe and watch any video without limits for the selected period."
+  },
+  "catalog": {
+    "eyebrow": "Topics",
+    "title": "Or buy individually",
+    "description": "One full topic or a single video — access for 1 month.",
+    "unavailable": "Catalog is temporarily unavailable. Check the database connection."
+  },
+  "pricing": {
+    "popular": "Popular",
+    "allVideos": "All course video lessons",
+    "allTopics": "All topics without limits",
+    "accessFor": "Access for {count, plural, one {# month} other {# months}}",
+    "plans": {
+      "sub-1m": {
+        "label": "1 month",
+        "description": "Full access to all video lessons for 30 days"
+      },
+      "sub-3m": {
+        "label": "3 months",
+        "description": "Full access to all video lessons for 90 days"
+      },
+      "sub-6m": {
+        "label": "6 months",
+        "description": "Full access to all video lessons for 180 days"
+      }
+    }
+  },
+  "checkout": {
+    "processing": "Processing…",
+    "testPayment": "Test payment",
+    "checkoutFailed": "Could not complete test checkout.",
+    "serverError": "Could not connect to the server."
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "registerTitle": "Create account",
+    "registerSubtitle": "Start learning English at your own pace.",
+    "loginFailed": "Could not sign in.",
+    "registerFailed": "Could not create account.",
+    "serverError": "Could not connect to the server. Please try again.",
+    "signingIn": "Signing in…",
+    "signIn": "Sign in",
+    "creatingAccount": "Creating account…",
+    "createAccount": "Create account",
+    "noAccount": "No account?",
+    "hasAccount": "Already have an account?",
+    "registerLink": "Sign up",
+    "loginLink": "Sign in"
+  },
+  "dashboard": {
+    "eyebrow": "Dashboard",
+    "greeting": "Hello, {name}",
+    "description": "All your purchased courses and progress will appear here.",
+    "myCourses": "My courses",
+    "myLessons": "My individual lessons",
+    "loading": "Loading courses…",
+    "loadError": "Unable to load courses.",
+    "emptyTitle": "You do not have any courses yet",
+    "emptyDescription": "Choose a course or individual lesson from the catalog to start learning English.",
+    "openCatalog": "Open catalog",
+    "instructor": "Instructor",
+    "practiceProgress": "Practice progress",
+    "practice": "Practice",
+    "expires": "expires",
+    "min": "min"
+  },
+  "admin": {
+    "panel": "Admin panel",
+    "site": "Site",
+    "overview": "Overview",
+    "coursesLessons": "Courses & lessons",
+    "teachers": "Teachers"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light mode",
+    "dark": "Dark mode"
+  }
+}

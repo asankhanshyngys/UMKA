@@ -1,0 +1,10 @@
+import { deleteQuestion, moveQuestion, updateQuestion } from "./actions";
+
+const questionTypes = ["MULTIPLE_CHOICE", "TRUE_FALSE", "FILL_BLANK", "MATCHING", "SHORT_TEXT", "FLASHCARD", "WORD_ORDER", "LISTENING"];
+
+type QuestionData = { id: string; text: string; audioUrl: string | null; type: string; answers: { text: string; correct: boolean }[] };
+
+export function QuestionAdminCard({ question, videoId }: { question: QuestionData; videoId: string }) {
+  const correctIndex = Math.max(1, question.answers.findIndex((answer) => answer.correct) + 1);
+  return <form action={updateQuestion.bind(null, question.id, videoId)} className="mt-3 grid gap-3 rounded-lg border border-border p-3 text-sm"><div className="flex justify-between gap-3"><p className="font-medium">Edit question</p><div className="flex gap-2"><button formAction={moveQuestion.bind(null, question.id, videoId, "up")} className="text-foreground-muted">↑</button><button formAction={moveQuestion.bind(null, question.id, videoId, "down")} className="text-foreground-muted">↓</button><button formAction={deleteQuestion.bind(null, question.id, videoId)} className="text-red-600">Delete</button></div></div><input name="text" defaultValue={question.text} required className="rounded border border-border bg-card p-2" /><select name="type" defaultValue={question.type} className="rounded border border-border bg-card p-2">{questionTypes.map((type) => <option key={type}>{type}</option>)}</select><input name="audioUrl" type="url" defaultValue={question.audioUrl ?? ""} placeholder="Audio URL for listening" className="rounded border border-border bg-card p-2" /><textarea name="answers" defaultValue={question.answers.map((answer) => answer.text).join("\n")} required className="min-h-24 rounded border border-border bg-card p-2" /><input name="correctIndex" type="number" min="1" defaultValue={correctIndex} required className="rounded border border-border bg-card p-2" /><button className="w-fit rounded border border-border px-3 py-2">Save question</button></form>;
+}

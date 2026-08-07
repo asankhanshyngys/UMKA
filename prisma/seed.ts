@@ -34,9 +34,11 @@ async function main() {
     create: { email: "student@test.com", name: "Test Student", password },
   });
 
-  let instructor = await prisma.instructor.findFirst({ where: { name: "John Teacher" } });
+  let instructor = await prisma.instructor.findFirst({ where: { name: { in: ["Umit Kazybayeva", "John Teacher"] } } });
   if (!instructor) {
-    instructor = await prisma.instructor.create({ data: { name: "John Teacher", bio: "English instructor" } });
+    instructor = await prisma.instructor.create({ data: { name: "Umit Kazybayeva", bio: "English instructor" } });
+  } else {
+    instructor = await prisma.instructor.update({ where: { id: instructor.id }, data: { name: "Umit Kazybayeva", bio: "English instructor" } });
   }
 
   const englishCategory = await prisma.category.upsert({
@@ -73,16 +75,17 @@ async function main() {
 
   let video = await prisma.video.findFirst({ where: { moduleId: courseModule.id, title: "Present Simple Explained" } });
   if (video) {
-    video = await prisma.video.update({ where: { id: video.id }, data: { description: "Lesson about Present Simple", storageKey: "videos/present-simple.mp4", duration: 900, price: 2990, order: 1, isFreePreview: true, deletedAt: null } });
+    video = await prisma.video.update({ where: { id: video.id }, data: { description: "Lesson about Present Simple", storageKey: "videos/test-lesson.mp4", duration: 900, price: 2990, order: 1, isFreePreview: true, deletedAt: null } });
   } else {
-    video = await prisma.video.create({ data: { title: "Present Simple Explained", description: "Lesson about Present Simple", storageKey: "videos/present-simple.mp4", duration: 900, price: 2990, order: 1, isFreePreview: true, moduleId: courseModule.id } });
+    video = await prisma.video.create({ data: { title: "Present Simple Explained", description: "Lesson about Present Simple", storageKey: "videos/test-lesson.mp4", duration: 900, price: 2990, order: 1, isFreePreview: true, moduleId: courseModule.id } });
   }
 
   const resource = await prisma.resource.findFirst({ where: { moduleId: courseModule.id, title: "Grammar PDF" } });
   if (!resource) await prisma.resource.create({ data: { title: "Grammar PDF", type: ResourceType.PDF, storageKey: "resources/grammar.pdf", moduleId: courseModule.id } });
 
   let practice = await prisma.practice.findFirst({ where: { moduleId: courseModule.id, title: "Grammar Practice" } });
-  if (!practice) practice = await prisma.practice.create({ data: { title: "Grammar Practice", moduleId: courseModule.id } });
+  if (practice) practice = await prisma.practice.update({ where: { id: practice.id }, data: { category: "GRAMMAR", videoId: video.id } });
+  else practice = await prisma.practice.create({ data: { title: "Grammar Practice", category: "GRAMMAR", moduleId: courseModule.id, videoId: video.id } });
   let section = await prisma.practiceSection.findFirst({ where: { practiceId: practice.id, title: "Present Simple Questions" } });
   if (!section) section = await prisma.practiceSection.create({ data: { title: "Present Simple Questions", order: 1, practiceId: practice.id } });
   let question = await prisma.question.findFirst({ where: { sectionId: section.id, text: "Choose correct answer: I ___ English" } });
@@ -93,6 +96,75 @@ async function main() {
       { text: "studies", correct: false, questionId: question.id },
       { text: "studied", correct: false, questionId: question.id },
     ] });
+  }
+
+  // Extra lessons make the beginner grammar module useful for testing the
+  // lesson list, ordering, individual prices, and practice locking flow.
+  const sampleLessons = [
+    {
+      title: "Present Simple: Daily Routines",
+      description: "Talk about what you do every day.",
+      order: 2,
+      price: 2490,
+      practiceTitle: "Daily routines practice",
+      category: "VOCABULARY",
+      question: "Choose the correct sentence.",
+      type: QuestionType.MULTIPLE_CHOICE,
+      answers: [
+        { text: "She goes to work at 9.", correct: true },
+        { text: "She go to work at 9.", correct: false },
+        { text: "She going to work at 9.", correct: false },
+      ],
+    },
+    {
+      title: "Present Simple: Negatives",
+      description: "Use don't and doesn't correctly.",
+      order: 3,
+      price: 2490,
+      practiceTitle: "Negative sentences practice",
+      category: "GRAMMAR",
+      question: "Complete the sentence: He ___ like coffee.",
+      type: QuestionType.FILL_BLANK,
+      answers: [{ text: "doesn't", correct: true }],
+    },
+    {
+      title: "Present Simple: Questions",
+      description: "Ask clear everyday questions with do and does.",
+      order: 4,
+      price: 2490,
+      practiceTitle: "Questions practice",
+      category: "GRAMMAR",
+      question: "Put the words in the correct order.",
+      type: QuestionType.WORD_ORDER,
+      answers: [{ text: "Where do you live?", correct: true }],
+    },
+  ];
+
+  for (const lesson of sampleLessons) {
+    let sampleVideo = await prisma.video.findFirst({ where: { moduleId: courseModule.id, title: lesson.title } });
+    const videoData = {
+      description: lesson.description,
+      storageKey: "videos/test-lesson.mp4",
+      duration: 420,
+      price: lesson.price,
+      order: lesson.order,
+      isFreePreview: false,
+      deletedAt: null,
+    };
+    if (sampleVideo) sampleVideo = await prisma.video.update({ where: { id: sampleVideo.id }, data: videoData });
+    else sampleVideo = await prisma.video.create({ data: { title: lesson.title, moduleId: courseModule.id, ...videoData } });
+
+    let samplePractice = await prisma.practice.findFirst({ where: { videoId: sampleVideo.id, title: lesson.practiceTitle } });
+    if (samplePractice) samplePractice = await prisma.practice.update({ where: { id: samplePractice.id }, data: { category: lesson.category } });
+    else samplePractice = await prisma.practice.create({ data: { title: lesson.practiceTitle, category: lesson.category, moduleId: courseModule.id, videoId: sampleVideo.id } });
+
+    let sampleSection = await prisma.practiceSection.findFirst({ where: { practiceId: samplePractice.id, title: "Quick check" } });
+    if (!sampleSection) sampleSection = await prisma.practiceSection.create({ data: { title: "Quick check", order: 1, practiceId: samplePractice.id } });
+    let sampleQuestion = await prisma.question.findFirst({ where: { sectionId: sampleSection.id, text: lesson.question } });
+    if (!sampleQuestion) sampleQuestion = await prisma.question.create({ data: { text: lesson.question, type: lesson.type, order: 1, sectionId: sampleSection.id } });
+    if (await prisma.answer.count({ where: { questionId: sampleQuestion.id } }) === 0) {
+      await prisma.answer.createMany({ data: lesson.answers.map((answer) => ({ ...answer, questionId: sampleQuestion.id })) });
+    }
   }
 
   const startsAt = new Date();

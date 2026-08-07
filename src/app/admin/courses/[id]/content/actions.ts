@@ -89,3 +89,16 @@ export async function deleteModule(
     );
 
 }
+
+export async function moveModule(moduleId: string, courseId: string, direction: "up" | "down") {
+    if (!await getCurrentAdmin()) throw new Error("Unauthorized");
+    const modules = await prisma.module.findMany({ where: { courseId, deletedAt: null }, orderBy: { order: "asc" }, select: { id: true, order: true } });
+    const index = modules.findIndex((courseModule) => courseModule.id === moduleId);
+    const neighbor = modules[index + (direction === "up" ? -1 : 1)];
+    if (index < 0 || !neighbor) return;
+    await prisma.$transaction([
+        prisma.module.update({ where: { id: moduleId }, data: { order: neighbor.order } }),
+        prisma.module.update({ where: { id: neighbor.id }, data: { order: modules[index].order } }),
+    ]);
+    revalidatePath(`/admin/courses/${courseId}/content`);
+}

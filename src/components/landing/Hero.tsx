@@ -1,31 +1,33 @@
 import Link from "next/link";
 import { Play } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
 
-export function Hero() {
+export async function Hero() {
+  const t = await getTranslations("hero");
+
   return (
     <section className="mx-auto max-w-6xl px-6 pb-20 pt-8">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-8">
           <p className="text-xs font-medium uppercase tracking-label text-foreground-subtle">
-            Английский язык · По подписке
+            {t("eyebrow")}
           </p>
 
           <h1 className="font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.15]">
-            Учите английский в&nbsp;своём темпе.
+            {t("title")}
           </h1>
 
           <p className="max-w-md text-base leading-relaxed text-foreground-muted">
-            Подписка открывает доступ ко всем видеоурокам. Или выберите отдельную
-            тему или один ролик — доступ на 1 месяц.
+            {t("description")}
           </p>
 
           <div className="flex flex-wrap gap-3">
             <Link href="#subscriptions">
-              <Button>Выбрать подписку</Button>
+              <Button>{t("ctaSubscription")}</Button>
             </Link>
             <Link href="#catalog">
-              <Button variant="secondary">Смотреть темы</Button>
+              <Button variant="secondary">{t("ctaTopics")}</Button>
             </Link>
           </div>
         </div>
@@ -34,7 +36,7 @@ export function Hero() {
           <div className="absolute inset-0 flex items-center justify-center">
             <button
               type="button"
-              aria-label="Воспроизвести видео"
+              aria-label={t("playVideo")}
               className="flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-transform hover:scale-105"
             >
               <Play className="ml-1 h-8 w-8 fill-white text-white" />

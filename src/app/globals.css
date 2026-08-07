@@ -1,34 +1,61 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #F9F7F2;
+  --card: #FFFFFF;
+  --border: #E8E4DC;
   --foreground: #1A1A1A;
+  --foreground-muted: #6B6560;
+  --foreground-subtle: #9C9690;
+  --accent: #1B3C35;
+  --accent-dark: #142E28;
+  --accent-light: #2A5249;
   --font-sans-stack: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-serif-stack: Georgia, Cambria, "Times New Roman", serif;
 }
 
 @theme inline {
-  --color-background: #F9F7F2;
-  --color-card: #FFFFFF;
-  --color-border: #E8E4DC;
-  --color-accent: #1B3C35;
-  --color-accent-dark: #142E28;
-  --color-accent-light: #2A5249;
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-light: var(--accent-light);
   --color-thumbnail-mustard: #C4A035;
   --color-thumbnail-sage: #8FA88E;
   --color-thumbnail-forest: #1B3C35;
-  --color-foreground: #1A1A1A;
-  --color-foreground-muted: #6B6560;
-  --color-foreground-subtle: #9C9690;
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
   --font-sans: var(--font-sans-stack);
   --font-serif: var(--font-serif-stack);
   --radius-2xl: 16px;
   --radius-3xl: 24px;
 }
 
+.dark {
+  --background: #141414;
+  --foreground: #F9F7F2;
+  --card: #1F1F1F;
+  --border: #333333;
+  --accent: #3D6B60;
+  --accent-dark: #2A5249;
+  --accent-light: #5A9183;
+  --foreground-muted: #C2BDB5;
+  --foreground-subtle: #9C9690;
+}
+
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans-stack);
 }
+
+input, textarea, select { color: var(--foreground); }
+.dark input.bg-white, .dark textarea.bg-white, .dark select.bg-white { background-color: var(--card); }

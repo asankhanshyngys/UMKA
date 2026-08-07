@@ -25,6 +25,20 @@ This is a single Next.js application. Features are separated into modules inside
 
 Run `npm run lint` before committing and `npm run build` before deployment.
 
+## Temporary local video testing
+
+For development only, copy a small MP4 file to `public/videos/`, for example `public/videos/test-lesson.mp4`. In the admin video form, set **Storage key or video path** to `videos/test-lesson.mp4`. After a learner receives test access, their dashboard opens `/learn/[course-id]` and plays the file.
+
+Files in `public/` are not protected. This local player is only a bridge for testing the learning flow; production lessons must use private streaming with expiring signed playback tokens.
+
+## Private video playback with Cloudflare Stream
+
+1. Upload a video to Cloudflare Stream and turn on **Require Signed URLs**. Restrict its allowed origin to your site domain.
+2. Set `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_STREAM_API_TOKEN`, and `CLOUDFLARE_STREAM_CUSTOMER_CODE` in `.env`. The API token needs permission to create Stream playback tokens.
+3. In the admin video form, enter the storage key as `cfstream:VIDEO_UID` (for example, `cfstream:abc123`).
+
+The player requests `/api/videos/[id]/playback` only after the user selects a lesson. The route verifies the signed-in learner has a valid subscription or course purchase (or is an admin), then makes a Cloudflare token that expires in five minutes. The Cloudflare credentials are never sent to the browser.
+
 ## Security model
 
 - Auth cookies are HTTP-only and secure in production.

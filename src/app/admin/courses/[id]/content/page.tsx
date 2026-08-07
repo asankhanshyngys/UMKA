@@ -1,93 +1,13 @@
-import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { ArrowLeft, Pencil, PlayCircle } from "lucide-react";
 import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import CreateModule from "./CreateModule";
 import ModuleActions from "./ModuleActions";
-import Link from "next/link";
 
-export default async function CourseContentPage({
-                                                    params,
-                                                }: {
-    params: Promise<{ id: string }>;
-}) {
-
-    const { id } = await params;
-
-    const course = await prisma.course.findUnique({
-        where: {
-            id,
-        },
-        include: {
-            modules: {
-                orderBy: {
-                    order: "asc",
-                },
-            },
-        },
-    });
-
-    if (!course) {
-        notFound();
-    }
-
-    return (
-        <div className="p-10">
-
-            <h1 className="text-3xl font-bold">
-                {course.title}
-            </h1>
-
-            <h2 className="text-xl mt-8 font-semibold">
-                Modules
-            </h2>
-
-            <CreateModule
-                courseId={course.id}
-            />
-
-            <div className="mt-5 space-y-4">
-
-                {course.modules.map((module) => (
-
-                    <div
-                        key={module.id}
-                        className="border rounded p-4"
-                    >
-
-                        <div className="flex items-center justify-between">
-
-                            <h3 className="font-bold">
-                                {module.title}
-                            </h3>
-
-                            <div className="flex gap-2">
-
-                                <Link
-                                    href={`/admin/modules/${module.id}`}
-                                    className="rounded bg-blue-600 px-4 py-2 text-white"
-                                >
-                                    Manage
-                                </Link>
-
-                                <ModuleActions
-                                    moduleId={module.id}
-                                    courseId={course.id}
-                                />
-
-                            </div>
-
-                        </div>
-
-
-                        <p>
-                            {module.description}
-                        </p>
-
-                    </div>
-
-                ))}
-
-            </div>
-
-        </div>
-    );
+export default async function CourseContentPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const course = await prisma.course.findUnique({ where: { id }, include: { modules: { where: { deletedAt: null }, orderBy: { order: "asc" }, include: { videos: { where: { deletedAt: null } } } } } });
+  if (!course || course.deletedAt) notFound();
+  return <div className="space-y-8"><Link href="/admin/courses" className="inline-flex items-center gap-2 text-sm text-foreground-muted hover:text-foreground"><ArrowLeft className="h-4 w-4" />All courses</Link><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm text-foreground-subtle">Course content · {course.status.toLowerCase()}</p><h1 className="mt-1 font-serif text-4xl">{course.title}</h1><p className="mt-3 text-foreground-muted">Add modules, edit their lessons, and use the arrows to set the student learning order.</p></div><Link href={`/admin/courses/${course.id}`} className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm"><Pencil className="h-4 w-4" />Course settings</Link></div><section className="rounded-2xl border border-border bg-card p-5"><h2 className="text-lg font-semibold">New module</h2><CreateModule courseId={course.id} /></section><section className="space-y-3">{course.modules.length === 0 ? <div className="rounded-2xl border border-dashed border-border p-8 text-center text-foreground-muted">Add your first module above.</div> : course.modules.map((courseModule, index) => <article key={courseModule.id} className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5"><div><p className="text-xs text-foreground-subtle">Module {courseModule.order} · {courseModule.videos.length} lessons</p><h2 className="mt-1 text-lg font-semibold">{courseModule.title}</h2>{courseModule.description && <p className="mt-2 text-sm text-foreground-muted">{courseModule.description}</p>}</div><div className="flex items-center gap-3"><Link href={`/admin/modules/${courseModule.id}`} className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-2 text-sm text-white"><PlayCircle className="h-4 w-4" />Lessons</Link><ModuleActions moduleId={courseModule.id} courseId={course.id} isFirst={index === 0} isLast={index === course.modules.length - 1} /></div></article>)}</section></div>;
 }

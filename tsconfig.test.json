@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": ".test-dist",
+    "rootDir": ".",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "isolatedModules": false
+  },
+  "include": ["tests/**/*.ts", "src/lib/learning.ts"],
+  "exclude": ["node_modules", ".next", ".test-dist"]
+}

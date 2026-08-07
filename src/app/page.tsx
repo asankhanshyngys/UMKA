@@ -5,10 +5,12 @@ import { TopicCatalog } from "@/components/landing/TopicCatalog";
 import { subscriptionPlans } from "@/data/mockData";
 import { getPublishedCourses } from "@/features/catalog/server";
 import type { CatalogCourse } from "@/features/catalog/types";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const t = await getTranslations("catalog");
   let courses: CatalogCourse[] = [];
   let catalogUnavailable = false;
 
@@ -18,6 +20,7 @@ export default async function Home() {
     console.error("Could not load the public course catalog", error);
     catalogUnavailable = true;
   }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -31,7 +34,7 @@ export default async function Home() {
       </div>
       {catalogUnavailable ? (
         <section className="mx-auto max-w-6xl px-6 py-20">
-          <p className="text-foreground-muted">Каталог временно недоступен. Проверьте подключение к базе данных.</p>
+          <p className="text-foreground-muted">{t("unavailable")}</p>
         </section>
       ) : (
         <TopicCatalog courses={courses} />

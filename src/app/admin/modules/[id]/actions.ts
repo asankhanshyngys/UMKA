@@ -44,6 +44,7 @@ export async function createVideo(moduleId: string, courseId: string, formData: 
       title,
       storageKey,
       description: String(formData.get("description") ?? "").trim() || null,
+      previewImage: String(formData.get("previewImage") ?? "").trim() || null,
       duration: positiveNumber(formData.get("duration"), "Duration"),
       price: positiveNumber(formData.get("price"), "Price"),
       isFreePreview: formData.get("isFreePreview") === "on",
@@ -68,6 +69,7 @@ export async function updateVideo(videoId: string, moduleId: string, courseId: s
       title,
       storageKey,
       description: String(formData.get("description") ?? "").trim() || null,
+      previewImage: String(formData.get("previewImage") ?? "").trim() || null,
       duration: positiveNumber(formData.get("duration"), "Duration"),
       price: positiveNumber(formData.get("price"), "Price"),
       isFreePreview: formData.get("isFreePreview") === "on",
@@ -81,6 +83,20 @@ export async function updateVideo(videoId: string, moduleId: string, courseId: s
 export async function deleteVideo(videoId: string, moduleId: string, courseId: string) {
   await ensureAdmin();
   await prisma.video.update({ where: { id: videoId }, data: { deletedAt: new Date() } });
+  revalidatePath(`/admin/modules/${moduleId}`);
+  revalidatePath(`/admin/courses/${courseId}/content`);
+}
+
+export async function moveVideo(videoId: string, moduleId: string, courseId: string, direction: "up" | "down") {
+  await ensureAdmin();
+  const videos = await prisma.video.findMany({ where: { moduleId, deletedAt: null }, orderBy: { order: "asc" }, select: { id: true, order: true } });
+  const index = videos.findIndex((video) => video.id === videoId);
+  const neighbor = videos[index + (direction === "up" ? -1 : 1)];
+  if (index < 0 || !neighbor) return;
+  await prisma.$transaction([
+    prisma.video.update({ where: { id: videoId }, data: { order: neighbor.order } }),
+    prisma.video.update({ where: { id: neighbor.id }, data: { order: videos[index].order } }),
+  ]);
   revalidatePath(`/admin/modules/${moduleId}`);
   revalidatePath(`/admin/courses/${courseId}/content`);
 }

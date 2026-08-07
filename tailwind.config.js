@@ -7,26 +7,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "#F9F7F2",
-        card: "#FFFFFF",
-        border: "#E8E4DC",
-        accent: {
-          DEFAULT: "#1B3C35",
-          dark: "#142E28",
-          light: "#2A5249",
-        },
-        thumbnail: {
-          mustard: "#C4A035",
-          sage: "#8FA88E",
-          forest: "#1B3C35",
-        },
-        foreground: {
-          DEFAULT: "#1A1A1A",
-          muted: "#6B6560",
-          subtle: "#9C9690",
-        },
-      },
       borderRadius: {
         "2xl": "16px",
         "3xl": "24px",

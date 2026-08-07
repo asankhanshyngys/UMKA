@@ -40,7 +40,7 @@ export async function getCurrentUser() {
 
   return prisma.user.findUnique({
     where: { id: payload.userId },
-    select: { id: true, name: true, email: true, role: true },
+    select: { id: true, name: true, email: true, role: true, emailVerifiedAt: true },
   });
 }
 

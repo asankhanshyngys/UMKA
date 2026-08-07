@@ -63,6 +63,9 @@ enum QuestionType {
   FILL_BLANK
   MATCHING
   SHORT_TEXT
+  FLASHCARD
+  WORD_ORDER
+  LISTENING
 }
 
 enum ResourceType {
@@ -93,6 +96,8 @@ model User {
 
   password String
 
+  emailVerifiedAt DateTime?
+
   avatarUrl String?
 
   role UserRole @default(USER)
@@ -115,9 +120,37 @@ model User {
 
   events Event[]
 
+  emailVerificationTokens EmailVerificationToken[]
+
+  passwordResetTokens PasswordResetToken[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
+
+model EmailVerificationToken {
+  id String @id @default(uuid())
+  tokenHash String @unique
+  userId String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id String @id @default(uuid())
+  tokenHash String @unique
+  userId String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // =====================
@@ -266,6 +299,8 @@ model Video {
 
   purchases VideoPurchase[]
 
+  practices Practice[]
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -304,9 +339,15 @@ model Practice {
 
   title String
 
+  category String @default("GRAMMAR")
+
   moduleId String
 
   module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  videoId String?
+
+  video Video? @relation(fields: [videoId], references: [id], onDelete: Cascade)
 
   sections PracticeSection[]
 
@@ -336,7 +377,11 @@ model Question {
 
   text String
 
+  audioUrl String?
+
   type QuestionType
+
+  order Int @default(1)
 
   sectionId String
 

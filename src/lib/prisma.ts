@@ -35,17 +35,17 @@ const adapter = new PrismaPg({
 
 
 const globalForPrisma = global as unknown as {
-    prisma: PrismaClient;
+    prismaWithOrderedQuestions?: PrismaClient;
 };
 
 
 export const prisma =
-    globalForPrisma.prisma ||
+    globalForPrisma.prismaWithOrderedQuestions ||
     new PrismaClient({
         adapter,
     });
 
 
 if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma = prisma;
+    globalForPrisma.prismaWithOrderedQuestions = prisma;
 }

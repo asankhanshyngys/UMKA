@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { createToken } from "@/lib/auth";
+import { createEmailVerificationToken } from "@/lib/account-tokens";
+import { sendVerificationEmail } from "@/lib/auth-email";
 
 
 export async function POST(request: Request) {
@@ -88,6 +90,13 @@ export async function POST(request: Request) {
             }
 
         });
+
+        try {
+            const verificationToken = await createEmailVerificationToken(user.id);
+            await sendVerificationEmail(user.email, verificationToken);
+        } catch (emailError) {
+            console.error("Unable to send verification email", emailError);
+        }
 
 
 
