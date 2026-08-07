@@ -25,6 +25,19 @@ This is a single Next.js application. Features are separated into modules inside
 
 Run `npm run lint` before committing and `npm run build` before deployment.
 
+## Deployment preparation
+
+The app is ready to deploy to a Next.js host such as Vercel once you have a production PostgreSQL database and domain.
+
+1. Create a production PostgreSQL database and copy its connection string into `DATABASE_URL`.
+2. Add production environment variables in your hosting dashboard: `DATABASE_URL`, a new strong `JWT_SECRET`, `APP_URL`, and later the Resend and Cloudflare Stream values.
+3. Set `APP_URL` to the final HTTPS address, for example `https://umka.kz`.
+4. Run `npx prisma migrate deploy` against the production database. Do not run the development seed in production.
+5. Deploy the app, then check `https://your-domain/api/health` returns `{ "status": "ok" }`.
+6. Before opening sales, configure a verified email sender domain, private video streaming, and a real payment provider.
+
+Never commit `.env` or production API keys. Back up the production database before schema changes.
+
 ## Temporary local video testing
 
 For development only, copy a small MP4 file to `public/videos/`, for example `public/videos/test-lesson.mp4`. In the admin video form, set **Storage key or video path** to `videos/test-lesson.mp4`. After a learner receives test access, their dashboard opens `/learn/[course-id]` and plays the file.
