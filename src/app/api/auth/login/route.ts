@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { checkLoginRateLimit, clearLoginRateLimit, getClientIp, recordFailedLogin } from "@/lib/rate-limit";
+
+const DUMMY_PASSWORD_HASH = "$2b$10$wDBktPVZASrj0vGJQqKlruD5DWEQjkQx6Fsg4m3RsfRtxk2W28Qzy";
 
 
 export async function POST(req: Request) {
@@ -25,14 +28,27 @@ export async function POST(req: Request) {
         }
 
 
+        const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+        const rateLimitKey = `${getClientIp(req)}:${normalizedEmail}`;
+        const rateLimit = checkLoginRateLimit(rateLimitKey);
+
+        if (!rateLimit.allowed) {
+            return NextResponse.json(
+                { error: "Too many sign-in attempts. Please try again later." },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } }
+            );
+        }
+
         const user = await prisma.user.findUnique({
             where: {
-                email,
+                email: normalizedEmail,
             },
         });
 
+        const passwordMatch = await bcrypt.compare(password, user?.password ?? DUMMY_PASSWORD_HASH);
 
-        if (!user) {
+        if (!user || !passwordMatch) {
+            recordFailedLogin(rateLimitKey);
             return NextResponse.json(
                 {
                     error: "Invalid credentials",
@@ -44,22 +60,7 @@ export async function POST(req: Request) {
         }
 
 
-        const passwordMatch = await bcrypt.compare(
-            password,
-            user.password
-        );
-
-
-        if (!passwordMatch) {
-            return NextResponse.json(
-                {
-                    error: "Invalid credentials",
-                },
-                {
-                    status: 401,
-                }
-            );
-        }
+        clearLoginRateLimit(rateLimitKey);
 
 
         const token = jwt.sign(

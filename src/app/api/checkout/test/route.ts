@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PurchaseStatus, SubscriptionPlan, SubscriptionStatus } from "@/generated/prisma/client";
+import { PaymentAccessType, PurchaseStatus, SubscriptionPlan, SubscriptionStatus } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -46,10 +46,10 @@ export async function POST(request: Request) {
     });
     if (currentPurchase) return NextResponse.json({ message: "You already have access." });
 
-    await prisma.$transaction([
-      prisma.coursePurchase.create({ data: { userId: user.id, courseId: course.id, price: course.price, status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } }),
-      prisma.payment.create({ data: { userId: user.id, amount: course.price, status: "SUCCESS", provider: "TEST", transactionId: `test-course-${course.id}-${now.getTime()}` } }),
-    ]);
+    await prisma.$transaction(async (transaction) => {
+      const purchase = await transaction.coursePurchase.create({ data: { userId: user.id, courseId: course.id, price: course.price, status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } });
+      await transaction.payment.create({ data: { userId: user.id, amount: course.price, status: "SUCCESS", provider: "TEST", transactionId: `test-course-${course.id}-${now.getTime()}`, accessType: PaymentAccessType.COURSE, accessId: purchase.id } });
+    });
     return NextResponse.json({ message: "Test course access granted." }, { status: 201 });
   }
 
@@ -64,10 +64,10 @@ export async function POST(request: Request) {
     if (activeSubscription || coursePurchase || modulePurchase) return NextResponse.json({ message: "Your existing access already includes this lesson." });
     const currentPurchase = await prisma.videoPurchase.findFirst({ where: { userId: user.id, videoId: video.id, status: PurchaseStatus.COMPLETED, expiresAt: { gt: now } } });
     if (currentPurchase) return NextResponse.json({ message: "You already have access to this lesson." });
-    await prisma.$transaction([
-      prisma.videoPurchase.create({ data: { userId: user.id, videoId: video.id, price: video.price, status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } }),
-      prisma.payment.create({ data: { userId: user.id, amount: video.price, status: "SUCCESS", provider: "TEST", transactionId: `test-video-${video.id}-${now.getTime()}` } }),
-    ]);
+    await prisma.$transaction(async (transaction) => {
+      const purchase = await transaction.videoPurchase.create({ data: { userId: user.id, videoId: video.id, price: video.price, status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } });
+      await transaction.payment.create({ data: { userId: user.id, amount: video.price, status: "SUCCESS", provider: "TEST", transactionId: `test-video-${video.id}-${now.getTime()}`, accessType: PaymentAccessType.VIDEO, accessId: purchase.id } });
+    });
     return NextResponse.json({ message: "Test lesson access granted." }, { status: 201 });
   }
 
@@ -81,10 +81,10 @@ export async function POST(request: Request) {
     if (activeSubscription || coursePurchase) return NextResponse.json({ message: "Your existing access already includes this module." });
     const currentPurchase = await prisma.modulePurchase.findFirst({ where: { userId: user.id, moduleId: courseModule.id, status: PurchaseStatus.COMPLETED, expiresAt: { gt: now } } });
     if (currentPurchase) return NextResponse.json({ message: "You already have access to this module." });
-    await prisma.$transaction([
-      prisma.modulePurchase.create({ data: { userId: user.id, moduleId: courseModule.id, price: courseModule.price, status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } }),
-      prisma.payment.create({ data: { userId: user.id, amount: courseModule.price, status: "SUCCESS", provider: "TEST", transactionId: `test-module-${courseModule.id}-${now.getTime()}` } }),
-    ]);
+    await prisma.$transaction(async (transaction) => {
+      const purchase = await transaction.modulePurchase.create({ data: { userId: user.id, moduleId: courseModule.id, price: courseModule.price, status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } });
+      await transaction.payment.create({ data: { userId: user.id, amount: courseModule.price, status: "SUCCESS", provider: "TEST", transactionId: `test-module-${courseModule.id}-${now.getTime()}`, accessType: PaymentAccessType.MODULE, accessId: purchase.id } });
+    });
     return NextResponse.json({ message: "Test module access granted." }, { status: 201 });
   }
 
@@ -100,12 +100,10 @@ export async function POST(request: Request) {
     const price = priceByMonths[body.months];
 
     await prisma.$transaction(async (transaction) => {
-      if (activeSubscription) {
-        await transaction.subscription.update({ where: { id: activeSubscription.id }, data: { plan: planByMonths[body.months], price, expiresAt } });
-      } else {
-        await transaction.subscription.create({ data: { userId: user.id, plan: planByMonths[body.months], price, status: SubscriptionStatus.ACTIVE, startsAt, expiresAt } });
-      }
-      await transaction.payment.create({ data: { userId: user.id, amount: price, status: "SUCCESS", provider: "TEST", transactionId: `test-subscription-${user.id}-${now.getTime()}` } });
+      const subscription = activeSubscription
+        ? await transaction.subscription.update({ where: { id: activeSubscription.id }, data: { plan: planByMonths[body.months], price, expiresAt } })
+        : await transaction.subscription.create({ data: { userId: user.id, plan: planByMonths[body.months], price, status: SubscriptionStatus.ACTIVE, startsAt, expiresAt } });
+      await transaction.payment.create({ data: { userId: user.id, amount: price, status: "SUCCESS", provider: "TEST", transactionId: `test-subscription-${user.id}-${now.getTime()}`, accessType: PaymentAccessType.SUBSCRIPTION, accessId: subscription.id } });
     });
     return NextResponse.json({ message: "Test subscription activated." }, { status: 201 });
   }

@@ -129,6 +129,13 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+enum PaymentAccessType {
+  COURSE
+  MODULE
+  VIDEO
+  SUBSCRIPTION
+}
+
 model EmailVerificationToken {
   id String @id @default(uuid())
   tokenHash String @unique
@@ -582,7 +589,17 @@ model Payment {
 
   transactionId String?
 
+  accessType PaymentAccessType?
+
+  accessId String?
+
+  refundedAt DateTime?
+
+  refundReason String?
+
   createdAt DateTime @default(now())
+
+  @@index([userId, status])
 }
 
 // =====================

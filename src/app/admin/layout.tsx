@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, LayoutDashboard, ExternalLink, GraduationCap } from "lucide-react";
+import { BookOpen, LayoutDashboard, ExternalLink, GraduationCap, CreditCard, BarChart3 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
@@ -65,6 +65,20 @@ export default async function AdminLayout({
             >
               <GraduationCap className="h-4 w-4" />
               {t("teachers")}
+            </Link>
+            <Link
+              href="/admin/payments"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground-muted transition-colors hover:bg-background hover:text-foreground"
+            >
+              <CreditCard className="h-4 w-4" />
+              Payments & refunds
+            </Link>
+            <Link
+              href="/admin/analytics"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground-muted transition-colors hover:bg-background hover:text-foreground"
+            >
+              <BarChart3 className="h-4 w-4" />
+              Analytics
             </Link>
           </nav>
         </aside>
