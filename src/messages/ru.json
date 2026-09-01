@@ -18,7 +18,9 @@
     "courses": "Курсы",
     "login": "Войти",
     "register": "Регистрация",
-    "signOut": "Выйти"
+    "signOut": "Выйти",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню"
   },
   "hero": {
     "eyebrow": "Английский язык · По подписке",
@@ -94,6 +96,8 @@
     "openCatalog": "Открыть каталог",
     "instructor": "Преподаватель",
     "practiceProgress": "Прогресс практики",
+    "lessonProgress": "Прогресс уроков",
+    "noPractices": "Практик пока нет",
     "practice": "Практика",
     "expires": "до",
     "min": "мин"
