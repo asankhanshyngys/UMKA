@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getPlatformSettings } from "@/lib/platform-settings";
 
 function parsePrice(value: FormDataEntryValue | null, field: string) {
   const price = Number(value);
@@ -22,10 +23,11 @@ export async function updatePlatformSettings(formData: FormData) {
     sixMonthSubscription: parsePrice(formData.get("sixMonthSubscription"), "Six-month subscription price"),
   };
 
-  const settings = await prisma.platformSettings.findFirst();
+  const settings = await getPlatformSettings();
   if (settings) await prisma.platformSettings.update({ where: { id: settings.id }, data });
   else await prisma.platformSettings.create({ data });
 
   revalidatePath("/admin/settings");
   revalidatePath("/");
+  revalidateTag("settings", { expire: 0 });
 }

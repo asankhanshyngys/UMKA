@@ -1,14 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
-import { prisma } from "@/lib/prisma";
+import { getPlatformSettings } from "@/lib/platform-settings";
 
 export async function Hero() {
   const [t, settings] = await Promise.all([
     getTranslations("hero"),
-    prisma.platformSettings.findFirst({ select: { heroImageUrl: true, heroVideoUrl: true } }),
+    getPlatformSettings(),
   ]);
 
   return (
@@ -38,7 +38,7 @@ export async function Hero() {
         </div>
 
         <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-accent">
-          {settings?.heroImageUrl && <img src={settings.heroImageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+          {settings?.heroImageUrl && <Image src={settings.heroImageUrl} alt="" fill priority sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />}
           {settings?.heroVideoUrl && (
             <a
               href={settings.heroVideoUrl}

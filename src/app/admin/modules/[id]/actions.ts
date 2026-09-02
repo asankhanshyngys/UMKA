@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -31,6 +31,7 @@ export async function updateModule(moduleId: string, courseId: string, formData:
 
   revalidatePath(`/admin/modules/${moduleId}`);
   revalidatePath(`/admin/courses/${courseId}/content`);
+  revalidateTag("courses", { expire: 0 });
 }
 
 export async function createVideo(moduleId: string, courseId: string, formData: FormData) {
@@ -56,6 +57,7 @@ export async function createVideo(moduleId: string, courseId: string, formData: 
 
   revalidatePath(`/admin/modules/${moduleId}`);
   revalidatePath(`/admin/courses/${courseId}/content`);
+  revalidateTag("courses", { expire: 0 });
 }
 
 export async function updateVideo(videoId: string, moduleId: string, courseId: string, formData: FormData) {
@@ -79,6 +81,7 @@ export async function updateVideo(videoId: string, moduleId: string, courseId: s
 
   revalidatePath(`/admin/modules/${moduleId}`);
   revalidatePath(`/admin/courses/${courseId}/content`);
+  revalidateTag("courses", { expire: 0 });
 }
 
 export async function deleteVideo(videoId: string, moduleId: string, courseId: string) {
@@ -86,6 +89,7 @@ export async function deleteVideo(videoId: string, moduleId: string, courseId: s
   await prisma.video.update({ where: { id: videoId }, data: { deletedAt: new Date() } });
   revalidatePath(`/admin/modules/${moduleId}`);
   revalidatePath(`/admin/courses/${courseId}/content`);
+  revalidateTag("courses", { expire: 0 });
 }
 
 export async function moveVideo(videoId: string, moduleId: string, courseId: string, direction: "up" | "down") {
@@ -100,4 +104,5 @@ export async function moveVideo(videoId: string, moduleId: string, courseId: str
   ]);
   revalidatePath(`/admin/modules/${moduleId}`);
   revalidatePath(`/admin/courses/${courseId}/content`);
+  revalidateTag("courses", { expire: 0 });
 }

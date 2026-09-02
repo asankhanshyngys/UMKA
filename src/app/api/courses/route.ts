@@ -42,7 +42,11 @@ export async function GET() {
         });
 
 
-        return NextResponse.json(courses);
+        return NextResponse.json(courses, {
+            headers: {
+                "Cache-Control": "public, s-maxage=300, stale-while-revalidate=60",
+            },
+        });
 
 
     } catch {

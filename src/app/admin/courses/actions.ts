@@ -2,7 +2,7 @@
 
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
     Difficulty,
     CourseStatus,
@@ -29,6 +29,7 @@ export async function deleteCourse(id:string) {
 
 
     revalidatePath("/admin/courses");
+    revalidateTag("courses", { expire: 0 });
 
 }
 
@@ -103,5 +104,6 @@ export async function createCourse(formData: FormData){
     });
 
     revalidatePath("/admin/courses");
+    revalidateTag("courses", { expire: 0 });
 
 }

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentAdmin } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 
 export async function createModule(
@@ -61,6 +61,7 @@ export async function createModule(
     revalidatePath(
         `/admin/courses/${courseId}/content`
     );
+    revalidateTag("courses", { expire: 0 });
 
 }
 
@@ -87,6 +88,7 @@ export async function deleteModule(
     revalidatePath(
         `/admin/courses/${courseId}/content`
     );
+    revalidateTag("courses", { expire: 0 });
 
 }
 
@@ -101,4 +103,5 @@ export async function moveModule(moduleId: string, courseId: string, direction: 
         prisma.module.update({ where: { id: neighbor.id }, data: { order: modules[index].order } }),
     ]);
     revalidatePath(`/admin/courses/${courseId}/content`);
+    revalidateTag("courses", { expire: 0 });
 }

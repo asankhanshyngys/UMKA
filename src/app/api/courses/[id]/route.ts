@@ -1,20 +1,10 @@
 import { NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
-
-export async function GET(
-    request: Request,
-    context: {
-        params: Promise<{ id: string }>
-    }
-) {
-
-    const { id } = await context.params;
-
-
-    const course = await prisma.course.findUnique({
-
+const getCourseById = unstable_cache(
+    async (id: string) => prisma.course.findUnique({
         where: {
             id,
         },
@@ -53,8 +43,23 @@ export async function GET(
             },
 
         },
+    }),
+    ["course-detail"],
+    { tags: ["courses"], revalidate: 300 },
+);
 
-    });
+
+export async function GET(
+    request: Request,
+    context: {
+        params: Promise<{ id: string }>
+    }
+) {
+
+    const { id } = await context.params;
+
+
+    const course = await getCourseById(id);
 
 
 

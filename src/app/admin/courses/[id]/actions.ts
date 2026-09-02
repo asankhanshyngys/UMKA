@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
     Difficulty,
     CourseStatus,
@@ -65,6 +65,7 @@ export async function updateCourse(
 
 
     revalidatePath("/admin/courses");
+    revalidateTag("courses", { expire: 0 });
 
     redirect("/admin/courses");
 }

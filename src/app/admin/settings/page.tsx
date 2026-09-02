@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { updatePlatformSettings } from "./actions";
-import { prisma } from "@/lib/prisma";
+import { getPlatformSettings } from "@/lib/platform-settings";
 
 export default async function SettingsPage() {
-  const settings = await prisma.platformSettings.findFirst();
+  const settings = await getPlatformSettings();
 
   return (
     <div className="max-w-2xl space-y-8">

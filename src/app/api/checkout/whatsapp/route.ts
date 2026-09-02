@@ -9,6 +9,7 @@ import {
 } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getPlatformSettings } from "@/lib/platform-settings";
 
 type CheckoutRequest =
   | { type: "course"; courseId: string }
@@ -111,7 +112,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid checkout request." }, { status: 400 });
   }
 
-  const settings = await prisma.platformSettings.findFirst();
+  const settings = await getPlatformSettings();
   const whatsappNumber = settings?.whatsappNumber?.replace(/\D/g, "");
   if (!whatsappNumber || whatsappNumber.length < 8) {
     return NextResponse.json({ error: "WhatsApp payments are not configured yet. Please contact the administrator." }, { status: 503 });

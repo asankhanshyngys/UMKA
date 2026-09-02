@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -29,7 +30,7 @@ export function verifyToken(token: string): TokenPayload | null {
   }
 }
 
-export async function getCurrentUser() {
+export const getCurrentUser = cache(async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   const payload = token ? verifyToken(token) : null;
@@ -42,7 +43,7 @@ export async function getCurrentUser() {
     where: { id: payload.userId },
     select: { id: true, name: true, email: true, role: true, emailVerifiedAt: true },
   });
-}
+});
 
 export async function getCurrentAdmin() {
   const user = await getCurrentUser();

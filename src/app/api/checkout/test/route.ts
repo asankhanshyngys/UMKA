@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { PaymentAccessType, PurchaseStatus, SubscriptionPlan, SubscriptionStatus } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getPlatformSettings } from "@/lib/platform-settings";
 
 type CheckoutRequest =
   | { type: "course"; courseId: string }
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
   }
 
   if (body.type === "subscription" && (body.months === 1 || body.months === 3 || body.months === 6)) {
-    const settings = await prisma.platformSettings.findFirst();
+    const settings = await getPlatformSettings();
     if (!settings) return NextResponse.json({ error: "Subscription pricing has not been configured." }, { status: 503 });
     const prices = { 1: settings.oneMonthSubscription, 3: settings.threeMonthSubscription, 6: settings.sixMonthSubscription };
     const active = await prisma.subscription.findFirst({ where: { userId: user.id, status: SubscriptionStatus.ACTIVE, expiresAt: { gt: now } }, orderBy: { expiresAt: "desc" } });
