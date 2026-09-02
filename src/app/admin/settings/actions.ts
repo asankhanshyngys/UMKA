@@ -15,6 +15,8 @@ export async function updatePlatformSettings(formData: FormData) {
 
   const data = {
     whatsappNumber: String(formData.get("whatsappNumber") ?? "").trim() || null,
+    heroImageUrl: String(formData.get("heroImageUrl") ?? "").trim() || null,
+    heroVideoUrl: String(formData.get("heroVideoUrl") ?? "").trim() || null,
     oneMonthSubscription: parsePrice(formData.get("oneMonthSubscription"), "One-month subscription price"),
     threeMonthSubscription: parsePrice(formData.get("threeMonthSubscription"), "Three-month subscription price"),
     sixMonthSubscription: parsePrice(formData.get("sixMonthSubscription"), "Six-month subscription price"),
@@ -25,4 +27,5 @@ export async function updatePlatformSettings(formData: FormData) {
   else await prisma.platformSettings.create({ data });
 
   revalidatePath("/admin/settings");
+  revalidatePath("/");
 }

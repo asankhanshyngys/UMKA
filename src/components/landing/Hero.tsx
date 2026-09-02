@@ -1,10 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
+import { prisma } from "@/lib/prisma";
 
 export async function Hero() {
-  const t = await getTranslations("hero");
+  const [t, settings] = await Promise.all([
+    getTranslations("hero"),
+    prisma.platformSettings.findFirst({ select: { heroImageUrl: true, heroVideoUrl: true } }),
+  ]);
 
   return (
     <section className="px-4 pb-20 pt-8 sm:px-6 lg:px-12 xl:px-20">
@@ -33,15 +38,18 @@ export async function Hero() {
         </div>
 
         <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-accent">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <button
-              type="button"
+          {settings?.heroImageUrl && <img src={settings.heroImageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+          {settings?.heroVideoUrl && (
+            <a
+              href={settings.heroVideoUrl}
+              target="_blank"
+              rel="noreferrer"
               aria-label={t("playVideo")}
-              className="flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-transform hover:scale-105"
+              className="absolute inset-0 flex items-center justify-center"
             >
-              <Play className="ml-1 h-8 w-8 fill-white text-white" />
-            </button>
-          </div>
+              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-transform hover:scale-105"><Play className="ml-1 h-8 w-8 fill-white text-white" /></span>
+            </a>
+          )}
         </div>
       </div>
     </section>

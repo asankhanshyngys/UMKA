@@ -659,6 +659,10 @@ model PlatformSettings {
 
   whatsappNumber String?
 
+  heroImageUrl String?
+
+  heroVideoUrl String?
+
   updatedAt DateTime @updatedAt
 }
 
