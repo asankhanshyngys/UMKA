@@ -65,7 +65,10 @@
     "processing": "Рәсімдеу…",
     "testPayment": "Сынақ төлем",
     "checkoutFailed": "Сынақ қол жеткізуді рәсімдеу сәтсіз аяқталды.",
-    "serverError": "Серверге қосылу мүмкін болмады."
+    "serverError": "Серверге қосылу мүмкін болмады.",
+    "payViaWhatsApp": "WhatsApp арқылы төлеу",
+    "whatsappPending": "Өтінім жіберілді, коды {referenceCode}. Төлемді WhatsApp-та растаңыз — менеджер тексерген соң қолжетімділік ашылады.",
+    "pendingRequest": "Өтінім жіберілді, коды {referenceCode} · растауды күтіп тұр"
   },
   "auth": {
     "loginTitle": "Кіру",
@@ -100,7 +103,9 @@
     "noPractices": "Практика әлі жоқ",
     "practice": "Практика",
     "expires": "дейін",
-    "min": "мин"
+    "min": "мин",
+    "pendingRequests": "Растауды күтіп тұрған өтінімдер",
+    "pendingRequest": "Өтінім жіберілді, коды {referenceCode} · растауды күтіп тұр"
   },
   "admin": {
     "panel": "Басқару панелі",

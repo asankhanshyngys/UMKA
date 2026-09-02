@@ -65,7 +65,10 @@
     "processing": "Processing…",
     "testPayment": "Test payment",
     "checkoutFailed": "Could not complete test checkout.",
-    "serverError": "Could not connect to the server."
+    "serverError": "Could not connect to the server.",
+    "payViaWhatsApp": "Pay via WhatsApp",
+    "whatsappPending": "Request sent, code {referenceCode}. Confirm payment in WhatsApp — access will open after the manager verifies it.",
+    "pendingRequest": "Request sent, code {referenceCode} · awaiting confirmation"
   },
   "auth": {
     "loginTitle": "Sign in",
@@ -100,7 +103,9 @@
     "noPractices": "No practices yet",
     "practice": "Practice",
     "expires": "expires",
-    "min": "min"
+    "min": "min",
+    "pendingRequests": "Requests awaiting confirmation",
+    "pendingRequest": "Request sent, code {referenceCode} · awaiting confirmation"
   },
   "admin": {
     "panel": "Admin panel",

@@ -182,7 +182,7 @@ async function main() {
   else await prisma.platformSettings.create({ data: settingsData });
 
   const payment = await prisma.payment.findFirst({ where: { transactionId: "TEST-001" } });
-  const paymentData = { userId: student.id, amount: 24990, status: PaymentStatus.SUCCESS, provider: "Kaspi", transactionId: "TEST-001" };
+  const paymentData = { userId: student.id, amount: 24990, status: PaymentStatus.SUCCESS, provider: "Kaspi", transactionId: "TEST-001", referenceCode: "LEGACY-TEST" };
   if (payment) await prisma.payment.update({ where: { id: payment.id }, data: paymentData });
   else await prisma.payment.create({ data: paymentData });
 

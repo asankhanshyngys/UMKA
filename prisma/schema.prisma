@@ -252,6 +252,8 @@ model Module {
 
   description String?
 
+  previewImage String?
+
   price Int
 
   order Int
@@ -617,6 +619,8 @@ model PracticeResult {
 model Payment {
   id String @id @default(uuid())
 
+  referenceCode String @unique
+
   userId String
 
   amount Int
@@ -652,6 +656,8 @@ model PlatformSettings {
   threeMonthSubscription Int
 
   sixMonthSubscription Int
+
+  whatsappNumber String?
 
   updatedAt DateTime @updatedAt
 }

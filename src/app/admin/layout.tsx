@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, LayoutDashboard, ExternalLink, GraduationCap, CreditCard, BarChart3, LibraryBig } from "lucide-react";
+import { BookOpen, LayoutDashboard, ExternalLink, GraduationCap, CreditCard, BarChart3, LibraryBig, Settings } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
@@ -76,6 +76,13 @@ export default async function AdminLayout({
             >
               <CreditCard className="h-4 w-4" />
               Payments & refunds
+            </Link>
+            <Link
+              href="/admin/settings"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground-muted transition-colors hover:bg-background hover:text-foreground"
+            >
+              <Settings className="h-4 w-4" />
+              Settings
             </Link>
             <Link
               href="/admin/analytics"

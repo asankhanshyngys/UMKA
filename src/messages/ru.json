@@ -65,7 +65,10 @@
     "processing": "Оформляем…",
     "testPayment": "Тестовая оплата",
     "checkoutFailed": "Не удалось оформить тестовый доступ.",
-    "serverError": "Не удалось подключиться к серверу."
+    "serverError": "Не удалось подключиться к серверу.",
+    "payViaWhatsApp": "Оплатить через WhatsApp",
+    "whatsappPending": "Заявка отправлена, код {referenceCode}. Подтвердите оплату в WhatsApp — доступ откроется после проверки менеджером.",
+    "pendingRequest": "Заявка отправлена, код {referenceCode} · ожидает подтверждения"
   },
   "auth": {
     "loginTitle": "Войти",
@@ -100,7 +103,9 @@
     "noPractices": "Практик пока нет",
     "practice": "Практика",
     "expires": "до",
-    "min": "мин"
+    "min": "мин",
+    "pendingRequests": "Заявки ожидают подтверждения",
+    "pendingRequest": "Заявка отправлена, код {referenceCode} · ожидает подтверждения"
   },
   "admin": {
     "panel": "Панель управления",

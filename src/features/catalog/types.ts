@@ -9,6 +9,7 @@ export type CatalogCourse = {
     id: string;
     title: string;
     description: string | null;
+    previewImage: string | null;
     price: number;
     order: number;
     videos: { id: string }[];

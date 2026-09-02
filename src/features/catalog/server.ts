@@ -18,6 +18,7 @@ export function getPublishedCourses() {
           id: true,
           title: true,
           description: true,
+          previewImage: true,
           price: true,
           order: true,
           videos: { where: { deletedAt: null }, select: { id: true } },

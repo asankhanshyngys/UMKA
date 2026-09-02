@@ -47,12 +47,19 @@ type PurchasedBook = {
   coverImageKey: string | null;
 };
 
+type PendingRequest = {
+  id: string;
+  title: string;
+  referenceCode: string;
+};
+
 export default function Courses() {
   const t = useTranslations("dashboard");
   const [courses, setCourses] = useState<Course[]>([]);
   const [standaloneLessons, setStandaloneLessons] = useState<StandaloneLesson[]>([]);
   const [purchasedModules, setPurchasedModules] = useState<PurchasedModule[]>([]);
   const [books, setBooks] = useState<PurchasedBook[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -66,6 +73,7 @@ export default function Courses() {
         setStandaloneLessons(data.standaloneLessons ?? []);
         setPurchasedModules(data.purchasedModules ?? []);
         setBooks(data.books ?? []);
+        setPendingRequests(data.pendingRequests ?? []);
       } catch (loadError) {
         setError(loadError instanceof Error ? loadError.message : t("loadError"));
       } finally {
@@ -87,7 +95,7 @@ export default function Courses() {
         </p>
       )}
 
-      {!isLoading && !error && courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && books.length === 0 && (
+      {!isLoading && !error && courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && books.length === 0 && pendingRequests.length === 0 && (
         <div className="mt-5 rounded-2xl border border-border bg-card p-6">
           <h3 className="text-lg font-semibold text-foreground">{t("emptyTitle")}</h3>
           <p className="mt-2 text-foreground-muted">{t("emptyDescription")}</p>
@@ -95,6 +103,20 @@ export default function Courses() {
             {t("openCatalog")}
           </Link>
         </div>
+      )}
+
+      {!isLoading && !error && pendingRequests.length > 0 && (
+        <>
+          <h2 className="mt-10 font-serif text-2xl text-foreground">{t("pendingRequests")}</h2>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {pendingRequests.map((request) => (
+              <div key={request.id} className="rounded-2xl border border-amber-200 bg-card p-5">
+                <h3 className="text-xl font-semibold text-foreground">{request.title}</h3>
+                <p className="mt-3 text-sm font-medium text-amber-700">{t("pendingRequest", { referenceCode: request.referenceCode })}</p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {!isLoading && !error && courses.length > 0 && (

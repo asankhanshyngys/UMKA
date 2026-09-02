@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { SubscriptionPlan } from "@/types/course";
 import { formatPrice } from "@/data/mockData";
-import { TestCheckoutButton } from "@/features/checkout/TestCheckoutButton";
+import { WhatsAppCheckoutButton } from "@/features/checkout/WhatsAppCheckoutButton";
 
 interface PricingCardProps {
   plan: SubscriptionPlan;
@@ -45,7 +45,7 @@ export async function PricingCard({ plan }: PricingCardProps) {
         </li>
       </ul>
 
-      <TestCheckoutButton
+      <WhatsAppCheckoutButton
         target={{ type: "subscription", months: plan.durationMonths }}
         className="mt-8"
       />

@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { ArrowUpRight, Layers3, PlayCircle } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { CatalogCourse } from "@/features/catalog/types";
 import { currency } from "@/data/mockData";
 import type { Locale } from "@/i18n/routing";
+import { ModuleCarousel } from "./ModuleCarousel";
 
 const thumbnailColors = ["bg-thumbnail-mustard", "bg-thumbnail-sage", "bg-thumbnail-forest"] as const;
 
@@ -35,12 +37,10 @@ export async function TopicCard({ course }: TopicCardProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 overflow-x-auto p-5 scroll-px-4 sm:grid-flow-col sm:grid-cols-none sm:auto-cols-[minmax(230px,1fr)] sm:scroll-px-0">
+      <ModuleCarousel>
         {course.modules.map((module, index) => (
-          <Link key={module.id} href={`/courses/${course.id}`} className="group min-w-0 rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-accent/40">
-            <div className={`flex aspect-[16/9] items-end rounded-xl p-4 ${thumbnailColors[index % thumbnailColors.length]}`}>
-              <Layers3 className="h-6 w-6 text-white/90" />
-            </div>
+          <Link key={module.id} href={`/courses/${course.id}`} className="group w-[calc((100vw-68px)/2)] shrink-0 snap-start rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-accent/40 sm:w-[calc((100vw-112px)/2)] lg:w-[260px]">
+            {module.previewImage ? <img src={module.previewImage} alt={`Preview for ${module.title}`} className="aspect-[16/9] w-full rounded-xl object-cover" /> : <div className={`flex aspect-[16/9] items-end rounded-xl p-4 ${thumbnailColors[index % thumbnailColors.length]}`}><Layers3 className="h-6 w-6 text-white/90" /></div>}
             <p className="mt-4 text-xs font-medium uppercase tracking-wide text-foreground-subtle">Module {String(module.order).padStart(2, "0")}</p>
             <h4 className="mt-1 text-base font-semibold text-foreground">{module.title}</h4>
             {module.description && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground-muted">{module.description}</p>}
@@ -50,7 +50,7 @@ export async function TopicCard({ course }: TopicCardProps) {
             </div>
           </Link>
         ))}
-      </div>
+      </ModuleCarousel>
     </article>
   );
 }

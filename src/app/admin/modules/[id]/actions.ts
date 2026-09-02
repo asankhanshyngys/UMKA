@@ -24,6 +24,7 @@ export async function updateModule(moduleId: string, courseId: string, formData:
     data: {
       title,
       description: String(formData.get("description") ?? "").trim() || null,
+      previewImage: String(formData.get("previewImage") ?? "").trim() || null,
       price: positiveNumber(formData.get("price"), "Price"),
     },
   });

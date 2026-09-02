@@ -76,5 +76,23 @@ export async function GET() {
     select: { book: { select: { id: true, title: true, author: true, coverImageKey: true } } },
     orderBy: { purchasedAt: "desc" },
   });
-  return NextResponse.json({ courses: coursesWithProgress, standaloneLessons, purchasedModules, books: books.map(({ book }) => book) });
+  const pendingPayments = user.role === "ADMIN" ? [] : await prisma.payment.findMany({
+    where: { userId: user.id, status: "PENDING", provider: "whatsapp" },
+    select: { accessType: true, accessId: true, referenceCode: true },
+  });
+  const pendingAccessIds = pendingPayments.flatMap((payment) => payment.accessId ? [payment.accessId] : []);
+  const [pendingCourses, pendingModules, pendingBooks, pendingSubscriptions] = user.role === "ADMIN" ? [[], [], [], []] : await Promise.all([
+    prisma.coursePurchase.findMany({ where: { id: { in: pendingAccessIds }, userId: user.id, status: "PENDING" }, include: { course: { select: { title: true } } } }),
+    prisma.modulePurchase.findMany({ where: { id: { in: pendingAccessIds }, userId: user.id, status: "PENDING" }, include: { module: { include: { course: { select: { title: true } } } } } }),
+    prisma.bookPurchase.findMany({ where: { id: { in: pendingAccessIds }, userId: user.id, status: "PENDING" }, include: { book: { select: { title: true } } } }),
+    prisma.subscription.findMany({ where: { id: { in: pendingAccessIds }, userId: user.id, status: "PENDING" }, select: { id: true, plan: true } }),
+  ]);
+  const pendingReferenceByAccessId = new Map(pendingPayments.map((payment) => [payment.accessId, payment.referenceCode]));
+  const pendingRequests = [
+    ...pendingCourses.map((purchase) => ({ id: purchase.id, title: purchase.course.title, referenceCode: pendingReferenceByAccessId.get(purchase.id) })),
+    ...pendingModules.map((purchase) => ({ id: purchase.id, title: `${purchase.module.course.title} — ${purchase.module.title}`, referenceCode: pendingReferenceByAccessId.get(purchase.id) })),
+    ...pendingBooks.map((purchase) => ({ id: purchase.id, title: purchase.book.title, referenceCode: pendingReferenceByAccessId.get(purchase.id) })),
+    ...pendingSubscriptions.map((subscription) => ({ id: subscription.id, title: `Subscription: ${subscription.plan.replaceAll("_", " ")}`, referenceCode: pendingReferenceByAccessId.get(subscription.id) })),
+  ].filter((request): request is { id: string; title: string; referenceCode: string } => Boolean(request.referenceCode));
+  return NextResponse.json({ courses: coursesWithProgress, standaloneLessons, purchasedModules, books: books.map(({ book }) => book), pendingRequests });
 }
