@@ -18,7 +18,9 @@
     "courses": "Courses",
     "login": "Sign in",
     "register": "Sign up",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "hero": {
     "eyebrow": "English · By subscription",
@@ -94,6 +96,8 @@
     "openCatalog": "Open catalog",
     "instructor": "Instructor",
     "practiceProgress": "Practice progress",
+    "lessonProgress": "Lesson progress",
+    "noPractices": "No practices yet",
     "practice": "Practice",
     "expires": "expires",
     "min": "min"

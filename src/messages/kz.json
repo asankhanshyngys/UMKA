@@ -18,7 +18,9 @@
     "courses": "Курстар",
     "login": "Кіру",
     "register": "Тіркелу",
-    "signOut": "Шығу"
+    "signOut": "Шығу",
+    "openMenu": "Мәзірді ашу",
+    "closeMenu": "Мәзірді жабу"
   },
   "hero": {
     "eyebrow": "Ағылшын тілі · Жазылым бойынша",
@@ -94,6 +96,8 @@
     "openCatalog": "Каталогты ашу",
     "instructor": "Оқытушы",
     "practiceProgress": "Практика прогрессі",
+    "lessonProgress": "Сабақ прогресі",
+    "noPractices": "Практика әлі жоқ",
     "practice": "Практика",
     "expires": "дейін",
     "min": "мин"
