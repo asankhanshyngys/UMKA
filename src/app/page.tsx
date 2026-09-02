@@ -2,8 +2,11 @@ import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/landing/Hero";
 import { SubscriptionPlans } from "@/components/landing/SubscriptionPlans";
 import { TopicCatalog } from "@/components/landing/TopicCatalog";
+import { BooksCatalog } from "@/components/landing/BooksCatalog";
 import { subscriptionPlans } from "@/data/mockData";
 import { getPublishedCourses } from "@/features/catalog/server";
+import { getPublishedBooks } from "@/features/books/server";
+import type { CatalogBook } from "@/features/books/server";
 import type { CatalogCourse } from "@/features/catalog/types";
 import { getTranslations } from "next-intl/server";
 
@@ -12,10 +15,11 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const t = await getTranslations("catalog");
   let courses: CatalogCourse[] = [];
+  let books: CatalogBook[] = [];
   let catalogUnavailable = false;
 
   try {
-    courses = await getPublishedCourses();
+    [courses, books] = await Promise.all([getPublishedCourses(), getPublishedBooks()]);
   } catch (error) {
     console.error("Could not load the public course catalog", error);
     catalogUnavailable = true;
@@ -28,10 +32,6 @@ export default async function Home() {
       <div className="mx-auto max-w-6xl px-6">
         <hr className="border-border" />
       </div>
-      <SubscriptionPlans plans={subscriptionPlans} />
-      <div className="mx-auto max-w-6xl px-6">
-        <hr className="border-border" />
-      </div>
       {catalogUnavailable ? (
         <section className="mx-auto max-w-6xl px-6 py-20">
           <p className="text-foreground-muted">{t("unavailable")}</p>
@@ -39,6 +39,9 @@ export default async function Home() {
       ) : (
         <TopicCatalog courses={courses} />
       )}
+      <BooksCatalog books={books} />
+      <div className="mx-auto max-w-6xl px-6"><hr className="border-border" /></div>
+      <SubscriptionPlans plans={subscriptionPlans} />
     </div>
   );
 }

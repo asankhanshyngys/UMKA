@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 type CheckoutTarget =
   | { type: "course"; courseId: string }
   | { type: "module"; moduleId: string }
-  | { type: "video"; videoId: string }
+  | { type: "book"; bookId: string }
   | { type: "subscription"; months: 1 | 3 | 6 };
 
 export function TestCheckoutButton({

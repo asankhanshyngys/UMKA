@@ -50,6 +50,9 @@ export function Header() {
         >
           {t("courses")}
         </Link>
+        <Link href="/books" className="hidden text-sm text-foreground-muted transition-colors hover:text-foreground sm:inline">
+          Books
+        </Link>
         <LanguageSwitcher />
         <ThemeToggle />
         {user ? (

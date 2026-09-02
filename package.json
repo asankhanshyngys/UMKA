@@ -10,6 +10,7 @@
     "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/learning.test.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1124.0",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "bcrypt": "^6.0.0",
@@ -20,6 +21,7 @@
     "next": "16.2.12",
     "next-intl": "^4.13.5",
     "next-themes": "^0.4.6",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.22.0",
     "prisma": "^7.9.1",
     "react": "19.2.4",

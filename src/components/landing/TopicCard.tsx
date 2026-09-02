@@ -1,14 +1,11 @@
 import Link from "next/link";
+import { ArrowUpRight, Layers3, PlayCircle } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { CatalogCourse } from "@/features/catalog/types";
 import { currency } from "@/data/mockData";
 import type { Locale } from "@/i18n/routing";
 
-const thumbnailColors = {
-  mustard: "bg-thumbnail-mustard",
-  sage: "bg-thumbnail-sage",
-  forest: "bg-thumbnail-forest",
-} as const;
+const thumbnailColors = ["bg-thumbnail-mustard", "bg-thumbnail-sage", "bg-thumbnail-forest"] as const;
 
 const localeMap: Record<Locale, string> = {
   en: "en-US",
@@ -23,23 +20,37 @@ interface TopicCardProps {
 export async function TopicCard({ course }: TopicCardProps) {
   const t = await getTranslations("common");
   const locale = (await getLocale()) as Locale;
-  const videoCount = course.modules.reduce(
-    (total, module) => total + module.videos.length,
-    0,
-  );
 
   return (
-    <Link href={`/courses/${course.id}`} className="group block">
-      <article className="overflow-hidden rounded-2xl bg-card transition-transform group-hover:-translate-y-0.5">
-        <div className={`aspect-[4/3] rounded-2xl ${thumbnailColors.mustard}`} />
-        <div className="px-1 py-4">
-          <h3 className="text-sm font-semibold text-foreground">{course.title}</h3>
-          <p className="mt-1 text-xs text-foreground-subtle">
-            {videoCount} {t("videos")} · {course.price.toLocaleString(localeMap[locale])} {currency} ·{" "}
-            {course.difficulty.replaceAll("_", " ")}
-          </p>
+    <article className="grid overflow-hidden rounded-3xl border border-border bg-card lg:grid-cols-[minmax(250px,0.85fr)_minmax(0,2.15fr)]">
+      <div className="flex min-h-72 flex-col bg-background p-7">
+        <p className="text-xs font-medium uppercase tracking-label text-foreground-subtle">Course collection</p>
+        <h3 className="mt-4 font-serif text-3xl leading-tight text-foreground">{course.title}</h3>
+        <p className="mt-4 max-w-sm text-sm leading-relaxed text-foreground-muted">{course.description}</p>
+        <div className="mt-auto flex items-center justify-between border-t border-border pt-5 text-sm">
+          <span className="text-foreground-muted">{course.modules.length} modules</span>
+          <Link href={`/courses/${course.id}`} className="font-semibold text-accent hover:text-accent-light">
+            View course <ArrowUpRight className="inline h-4 w-4" />
+          </Link>
         </div>
-      </article>
-    </Link>
+      </div>
+
+      <div className="grid gap-4 overflow-x-auto p-5 sm:grid-flow-col sm:grid-cols-none sm:auto-cols-[minmax(230px,1fr)]">
+        {course.modules.map((module, index) => (
+          <Link key={module.id} href={`/courses/${course.id}`} className="group min-w-0 rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-accent/40">
+            <div className={`flex aspect-[16/9] items-end rounded-xl p-4 ${thumbnailColors[index % thumbnailColors.length]}`}>
+              <Layers3 className="h-6 w-6 text-white/90" />
+            </div>
+            <p className="mt-4 text-xs font-medium uppercase tracking-wide text-foreground-subtle">Module {String(module.order).padStart(2, "0")}</p>
+            <h4 className="mt-1 text-base font-semibold text-foreground">{module.title}</h4>
+            {module.description && <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-foreground-muted">{module.description}</p>}
+            <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-sm">
+              <span className="flex items-center gap-1 text-foreground-muted"><PlayCircle className="h-4 w-4" /> {module.videos.length} {t("videos")}</span>
+              <span className="font-semibold text-foreground">{module.price.toLocaleString(localeMap[locale])} {currency}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </article>
   );
 }

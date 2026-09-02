@@ -5,5 +5,12 @@ export type CatalogCourse = {
   price: number;
   difficulty: string;
   thumbnail: string | null;
-  modules: { id: string; videos: { id: string }[] }[];
+  modules: {
+    id: string;
+    title: string;
+    description: string | null;
+    price: number;
+    order: number;
+    videos: { id: string }[];
+  }[];
 };

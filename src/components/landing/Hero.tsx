@@ -23,7 +23,7 @@ export async function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-3">
-            <Link href="#subscriptions">
+            <Link href="#catalog">
               <Button>{t("ctaSubscription")}</Button>
             </Link>
             <Link href="#catalog">

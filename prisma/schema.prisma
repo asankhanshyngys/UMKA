@@ -109,6 +109,7 @@ model User {
   modulePurchases ModulePurchase[]
 
   videoPurchases VideoPurchase[]
+  bookPurchases BookPurchase[]
 
   videoProgress VideoProgress[]
 
@@ -133,6 +134,7 @@ enum PaymentAccessType {
   COURSE
   MODULE
   VIDEO
+  BOOK
   SUBSCRIPTION
 }
 
@@ -495,6 +497,42 @@ model VideoPurchase {
   video Video @relation(fields: [videoId], references: [id])
 
   createdAt DateTime @default(now())
+}
+
+model Book {
+  id String @id @default(uuid())
+
+  title String
+  slug String @unique
+  description String
+  author String
+  coverImageKey String?
+  storageKey String
+  price Int
+  status CourseStatus @default(DRAFT)
+
+  purchases BookPurchase[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+}
+
+model BookPurchase {
+  id String @id @default(uuid())
+
+  userId String
+  bookId String
+  pricePaid Int
+  status PurchaseStatus
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  purchasedAt DateTime @default(now())
+
+  @@unique([userId, bookId])
+  @@index([bookId, status])
 }
 
 // =====================

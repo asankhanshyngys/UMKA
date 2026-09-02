@@ -11,7 +11,18 @@ export function getPublishedCourses() {
       price: true,
       difficulty: true,
       thumbnail: true,
-      modules: { select: { id: true, videos: { select: { id: true } } } },
+      modules: {
+        where: { deletedAt: null },
+        orderBy: { order: "asc" },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          price: true,
+          order: true,
+          videos: { where: { deletedAt: null }, select: { id: true } },
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });

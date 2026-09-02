@@ -1,0 +1,10 @@
+import { Header } from "@/components/layout/Header";
+import { BooksCatalog } from "@/components/landing/BooksCatalog";
+import { getPublishedBooks } from "@/features/books/server";
+
+export const dynamic = "force-dynamic";
+
+export default async function BooksPage() {
+  const books = await getPublishedBooks();
+  return <div className="min-h-screen bg-background"><Header /><main><BooksCatalog books={books} /></main></div>;
+}

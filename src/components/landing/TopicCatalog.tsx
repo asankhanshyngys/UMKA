@@ -21,7 +21,7 @@ export async function TopicCatalog({ courses }: TopicCatalogProps) {
         <p className="max-w-xl text-base text-foreground-muted">{t("description")}</p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="space-y-8">
         {courses.map((course) => (
           <TopicCard key={course.id} course={course} />
         ))}
