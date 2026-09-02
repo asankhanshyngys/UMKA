@@ -29,18 +29,18 @@ export default async function Home() {
     <div className="min-h-screen bg-background">
       <Header />
       <Hero />
-      <div className="mx-auto max-w-6xl px-4 sm:px-0">
+      <div className="px-4 sm:px-6 lg:px-12 xl:px-20 ">
         <hr className="border-border" />
       </div>
       {catalogUnavailable ? (
-        <section className="mx-auto max-w-6xl px-4 py-20 sm:px-0">
+        <section className="px-4 sm:px-6 lg:px-12 xl:px-20 py-20 ">
           <p className="text-foreground-muted">{t("unavailable")}</p>
         </section>
       ) : (
         <TopicCatalog courses={courses} />
       )}
       <BooksCatalog books={books} />
-      <div className="mx-auto max-w-6xl px-4 sm:px-0"><hr className="border-border" /></div>
+      <div className="px-4 sm:px-6 lg:px-12 xl:px-20 "><hr className="border-border" /></div>
       <SubscriptionPlans plans={subscriptionPlans} />
     </div>
   );

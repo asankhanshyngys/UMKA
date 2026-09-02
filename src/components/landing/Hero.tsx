@@ -7,14 +7,14 @@ export async function Hero() {
   const t = await getTranslations("hero");
 
   return (
-    <section className="mx-auto max-w-6xl px-4 pb-20 pt-8 sm:px-0">
-      <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <div className="space-y-8">
+    <section className="px-4 pb-20 pt-8 sm:px-6 lg:px-12 xl:px-20">
+      <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+        <div className="min-w-0 space-y-8">
           <p className="text-xs font-medium uppercase tracking-label text-foreground-subtle">
             {t("eyebrow")}
           </p>
 
-          <h1 className="font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.15]">
+          <h1 className="max-w-[14ch] font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.15]">
             {t("title")}
           </h1>
 

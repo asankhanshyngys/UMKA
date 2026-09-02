@@ -77,7 +77,7 @@ export function Header() {
   const accountHref = user?.role === "ADMIN" ? "/admin" : "/dashboard";
 
   return (
-    <header className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-6">
+    <header className="relative flex items-center justify-between px-4 py-6 sm:px-6 lg:px-12 xl:px-20">
       <Link href="/" className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
           <span className="font-serif text-lg font-medium text-white">U</span>

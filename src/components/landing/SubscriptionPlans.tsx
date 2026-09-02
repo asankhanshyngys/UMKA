@@ -10,7 +10,7 @@ export async function SubscriptionPlans({ plans }: SubscriptionPlansProps) {
   const t = await getTranslations("subscriptions");
 
   return (
-    <section id="subscriptions" className="mx-auto max-w-6xl px-4 py-20 sm:px-0">
+    <section id="subscriptions" className="px-4 py-20 sm:px-6 lg:px-12 xl:px-20">
       <div className="mb-10 space-y-3">
         <p className="text-xs font-medium uppercase tracking-label text-foreground-subtle">
           {t("eyebrow")}

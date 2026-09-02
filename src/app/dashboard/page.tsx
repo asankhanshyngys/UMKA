@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-6xl px-4 py-12 sm:px-0">
+      <main className="px-4 sm:px-6 lg:px-12 xl:px-20 py-12 ">
         <p className="text-sm text-foreground-subtle">{t("eyebrow")}</p>
         <h1 className="mt-1 font-serif text-4xl text-foreground">
           {t("greeting", { name: user.name })}

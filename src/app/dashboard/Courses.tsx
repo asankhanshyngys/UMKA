@@ -98,7 +98,7 @@ export default function Courses() {
       )}
 
       {!isLoading && !error && courses.length > 0 && (
-        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {courses.map((course) => {
             const percent =
               course.progress.totalPractices === 0
@@ -144,7 +144,7 @@ export default function Courses() {
       {!isLoading && !error && standaloneLessons.length > 0 && (
         <>
           <h2 className="mt-10 font-serif text-2xl text-foreground">{t("myLessons")}</h2>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {standaloneLessons.map((lesson) => (
               <Link
                 key={lesson.id}
@@ -175,7 +175,7 @@ export default function Courses() {
       {!isLoading && !error && purchasedModules.length > 0 && (
         <>
           <h2 className="mt-10 font-serif text-2xl text-foreground">My modules</h2>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {purchasedModules.map((courseModule) => (
               <Link key={courseModule.id} href={`/learn/module/${courseModule.id}`} className="rounded-2xl border border-border bg-card p-5 transition-transform hover:-translate-y-0.5">
                 <p className="text-xs text-foreground-subtle">{courseModule.course.title}</p>
@@ -191,7 +191,7 @@ export default function Courses() {
       {!isLoading && !error && books.length > 0 && (
         <>
           <h2 className="mt-10 font-serif text-2xl text-foreground">My books</h2>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {books.map((book) => (
               <Link key={book.id} href={`/books/${book.id}/read`} className="group flex gap-4 rounded-2xl border border-border bg-card p-4 transition-transform hover:-translate-y-0.5">
                 <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-lg bg-background">

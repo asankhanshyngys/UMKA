@@ -18,7 +18,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-card">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+        <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-12 xl:px-20">
           <Link href="/admin" className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent font-serif text-lg text-white">
               U
@@ -42,7 +42,7 @@ export default async function AdminLayout({
           </div>
         </div>
       </header>
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-0 lg:grid-cols-[220px_1fr]">
+      <div className="grid gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[220px_1fr] lg:px-12 xl:px-20">
         <aside className="h-fit rounded-2xl border border-border bg-card p-3">
           <nav className="space-y-1">
             <Link
