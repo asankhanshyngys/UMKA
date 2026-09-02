@@ -109,6 +109,27 @@
     "coursesLessons": "Курсы и уроки",
     "teachers": "Преподаватели"
   },
+  "courseDetail": {
+    "backToCatalog": "Назад к каталогу",
+    "fullCourse": "Полный курс",
+    "instructor": "Преподаватель: {name}",
+    "choosePath": "Выберите формат",
+    "modulesTitle": "Модули курса",
+    "modulesDescription": "Купите полный курс или выберите нужные модули. Все уроки и практика уже включены в модуль.",
+    "fullAccess": "У вас уже есть полный доступ",
+    "openCourse": "Открыть курс",
+    "openModule": "Открыть модуль",
+    "moduleNumber": "Модуль {count}",
+    "moduleCount": "{count, plural, one {# модуль} few {# модуля} many {# модулей} other {# модулей}}",
+    "lessonCount": "{count, plural, one {# урок} few {# урока} many {# уроков} other {# уроков}}",
+    "lessonMeta": "{count} мин · включает практику",
+    "difficulty": { "BEGINNER": "Начальный уровень", "ELEMENTARY": "Базовый уровень", "INTERMEDIATE": "Средний уровень", "UPPER_INTERMEDIATE": "Выше среднего", "ADVANCED": "Продвинутый уровень" }
+  },
+  "learn": {
+    "backToDashboard": "Мои курсы",
+    "eyebrow": "Курс",
+    "unlockDescription": "Выполняйте практику каждого урока, чтобы открыть следующий."
+  },
   "theme": {
     "toggle": "Переключить тему",
     "light": "Светлая тема",

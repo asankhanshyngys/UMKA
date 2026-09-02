@@ -109,6 +109,27 @@
     "coursesLessons": "Курстар мен сабақтар",
     "teachers": "Оқытушылар"
   },
+  "courseDetail": {
+    "backToCatalog": "Каталогқа оралу",
+    "fullCourse": "Толық курс",
+    "instructor": "Оқытушы: {name}",
+    "choosePath": "Форматты таңдаңыз",
+    "modulesTitle": "Курс модульдері",
+    "modulesDescription": "Толық курсты сатып алыңыз немесе өзіңізге керек модульдерді таңдаңыз. Әр модульге сабақтар мен практика кіреді.",
+    "fullAccess": "Сізде толық қолжетімділік бар",
+    "openCourse": "Курсты ашу",
+    "openModule": "Модульді ашу",
+    "moduleNumber": "{count}-модуль",
+    "moduleCount": "{count} модуль",
+    "lessonCount": "{count} сабақ",
+    "lessonMeta": "{count} мин · практика кіреді",
+    "difficulty": { "BEGINNER": "Бастапқы деңгей", "ELEMENTARY": "Негізгі деңгей", "INTERMEDIATE": "Орта деңгей", "UPPER_INTERMEDIATE": "Ортадан жоғары", "ADVANCED": "Жоғары деңгей" }
+  },
+  "learn": {
+    "backToDashboard": "Менің курстарым",
+    "eyebrow": "Курс",
+    "unlockDescription": "Келесі сабақты ашу үшін әр сабақтың практикасын орындаңыз."
+  },
   "theme": {
     "toggle": "Теманы ауыстыру",
     "light": "Жарық тема",

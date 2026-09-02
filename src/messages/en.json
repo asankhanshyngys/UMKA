@@ -109,6 +109,27 @@
     "coursesLessons": "Courses & lessons",
     "teachers": "Teachers"
   },
+  "courseDetail": {
+    "backToCatalog": "Back to catalog",
+    "fullCourse": "Full course",
+    "instructor": "Instructor: {name}",
+    "choosePath": "Choose your format",
+    "modulesTitle": "Course modules",
+    "modulesDescription": "Purchase the complete course or choose the modules you need. Each module includes its lessons and practice.",
+    "fullAccess": "You already have full access",
+    "openCourse": "Open course",
+    "openModule": "Open module",
+    "moduleNumber": "Module {count}",
+    "moduleCount": "{count, plural, one {# module} other {# modules}}",
+    "lessonCount": "{count, plural, one {# lesson} other {# lessons}}",
+    "lessonMeta": "{count} min · includes practice",
+    "difficulty": { "BEGINNER": "Beginner", "ELEMENTARY": "Elementary", "INTERMEDIATE": "Intermediate", "UPPER_INTERMEDIATE": "Upper intermediate", "ADVANCED": "Advanced" }
+  },
+  "learn": {
+    "backToDashboard": "My courses",
+    "eyebrow": "Course",
+    "unlockDescription": "Complete each lesson's practice to unlock the next lesson."
+  },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light mode",
