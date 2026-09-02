@@ -112,8 +112,16 @@
     "site": "Site",
     "overview": "Overview",
     "coursesLessons": "Courses & lessons",
-    "teachers": "Teachers"
+    "teachers": "Teachers",
+    "content": "Content",
+    "commerce": "Commerce",
+    "system": "System",
+    "books": "Books",
+    "payments": "Payments",
+    "analytics": "Analytics",
+    "settings": "Settings"
   },
+  "nav": { "dashboard": "Home", "myCourses": "My courses", "catalog": "Catalog", "books": "Books", "more": "More" },
   "courseDetail": {
     "backToCatalog": "Back to catalog",
     "fullCourse": "Full course",

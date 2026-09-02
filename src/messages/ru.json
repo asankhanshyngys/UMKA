@@ -112,8 +112,16 @@
     "site": "Сайт",
     "overview": "Обзор",
     "coursesLessons": "Курсы и уроки",
-    "teachers": "Преподаватели"
+    "teachers": "Преподаватели",
+    "content": "Контент",
+    "commerce": "Коммерция",
+    "system": "Система",
+    "books": "Книги",
+    "payments": "Платежи",
+    "analytics": "Аналитика",
+    "settings": "Настройки"
   },
+  "nav": { "dashboard": "Главная", "myCourses": "Мои курсы", "catalog": "Каталог", "books": "Книги", "more": "Ещё" },
   "courseDetail": {
     "backToCatalog": "Назад к каталогу",
     "fullCourse": "Полный курс",

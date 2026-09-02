@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
+import { UserBottomNav } from "@/components/navigation/UserBottomNav";
 
 type User = { name: string; role: "USER" | "ADMIN" };
 
@@ -77,6 +78,7 @@ export function Header() {
   const accountHref = user?.role === "ADMIN" ? "/admin" : "/dashboard";
 
   return (
+    <>
     <header className="relative flex items-center justify-between px-4 py-6 sm:px-6 lg:px-12 xl:px-20">
       <Link href="/" className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
@@ -96,7 +98,7 @@ export function Header() {
         </Link>
         <LanguageSwitcher />
         <ThemeToggle />
-        <button
+        {!user && <button
           ref={buttonRef}
           type="button"
           className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-foreground-muted transition-colors hover:bg-card hover:text-foreground sm:hidden"
@@ -107,7 +109,7 @@ export function Header() {
           onClick={() => setMenuOpen((open) => !open)}
         >
           {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </button>
+        </button>}
         {user ? (
           <div className="hidden items-center gap-3 sm:flex">
             <Link href={accountHref} className={navLinkClass}>
@@ -193,5 +195,7 @@ export function Header() {
         </div>
       )}
     </header>
+    {user && <UserBottomNav />}
+    </>
   );
 }

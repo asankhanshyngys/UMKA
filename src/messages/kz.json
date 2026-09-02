@@ -112,8 +112,16 @@
     "site": "Сайт",
     "overview": "Шолу",
     "coursesLessons": "Курстар мен сабақтар",
-    "teachers": "Оқытушылар"
+    "teachers": "Оқытушылар",
+    "content": "Контент",
+    "commerce": "Коммерция",
+    "system": "Жүйе",
+    "books": "Кітаптар",
+    "payments": "Төлемдер",
+    "analytics": "Талдау",
+    "settings": "Баптаулар"
   },
+  "nav": { "dashboard": "Басты бет", "myCourses": "Курстарым", "catalog": "Каталог", "books": "Кітаптар", "more": "Тағы" },
   "courseDetail": {
     "backToCatalog": "Каталогқа оралу",
     "fullCourse": "Толық курс",
