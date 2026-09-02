@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { getBookCoverUrl } from "@/lib/book-cover";
 
 type Course = {
   id: string;
@@ -217,7 +218,7 @@ export default function Courses() {
             {books.map((book) => (
               <Link key={book.id} href={`/books/${book.id}/read`} className="group flex gap-4 rounded-2xl border border-border bg-card p-4 transition-transform hover:-translate-y-0.5">
                 <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-lg bg-background">
-                  {book.coverImageKey && <Image src={`/api/books/${book.id}/cover`} alt="" fill className="object-cover" sizes="80px" />}
+                  {getBookCoverUrl(book) && <Image src={getBookCoverUrl(book)!} alt="" fill className="object-cover" sizes="80px" />}
                 </div>
                 <div><p className="text-xs text-foreground-subtle">Digital book · {book.author}</p><h3 className="mt-1 text-lg font-semibold text-foreground">{book.title}</h3><span className="mt-4 inline-block text-sm font-medium text-accent">Read book →</span></div>
               </Link>

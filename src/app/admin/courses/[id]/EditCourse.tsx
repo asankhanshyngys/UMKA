@@ -3,6 +3,7 @@
 import { updateCourse } from "./actions";
 import Link from "next/link";
 import { Course } from "@/generated/prisma/client";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 
 export default function EditCourse({
@@ -30,6 +31,8 @@ export default function EditCourse({
                 defaultValue={course.description}
                 className="border p-2 block"
             />
+
+            <ImageUploadField name="thumbnail" defaultValue={course.thumbnail} label="Course thumbnail" />
 
 
             <input

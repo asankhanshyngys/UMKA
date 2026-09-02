@@ -7,7 +7,6 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 const MAX_PDF_SIZE = 25 * 1024 * 1024;
-const MAX_COVER_SIZE = 5 * 1024 * 1024;
 
 async function ensureAdmin() {
   if (!await getCurrentAdmin()) throw new Error("Unauthorized");
@@ -38,11 +37,6 @@ async function uploadedPdf(formData: FormData, required = false) {
   return file ? uploadBookObject("pdf", file.name, file.bytes, file.type) : null;
 }
 
-async function uploadedCover(formData: FormData) {
-  const file = await uploadedFile(formData, "cover", MAX_COVER_SIZE, ["image/jpeg", "image/png", "image/webp"]);
-  return file ? uploadBookObject("cover", file.name, file.bytes, file.type) : null;
-}
-
 function statusFor(formData: FormData) {
   const status = formData.get("status");
   return status === "PUBLISHED" ? CourseStatus.PUBLISHED : status === "ARCHIVED" ? CourseStatus.ARCHIVED : CourseStatus.DRAFT;
@@ -66,7 +60,7 @@ export async function createBook(formData: FormData) {
   const price = Number(formData.get("price"));
   if (!Number.isSafeInteger(price) || price < 0) throw new Error("Price must be a non-negative whole number.");
   const storageKey = await uploadedPdf(formData, true);
-  const coverImageKey = await uploadedCover(formData);
+  const coverImageKey = String(formData.get("coverImageKey") ?? "").trim() || null;
 
   await prisma.book.create({ data: { title, slug: bookSlug(title), author, description, price, status: statusFor(formData), storageKey: storageKey!, coverImageKey } });
   revalidateBookPaths();
@@ -79,8 +73,9 @@ export async function updateBook(id: string, formData: FormData) {
   const description = requiredText(formData, "description");
   const price = Number(formData.get("price"));
   if (!Number.isSafeInteger(price) || price < 0) throw new Error("Price must be a non-negative whole number.");
-  const [storageKey, coverImageKey] = await Promise.all([uploadedPdf(formData), uploadedCover(formData)]);
-  await prisma.book.update({ where: { id }, data: { title, author, description, price, status: statusFor(formData), ...(storageKey ? { storageKey } : {}), ...(coverImageKey ? { coverImageKey } : {}) } });
+  const storageKey = await uploadedPdf(formData);
+  const coverImageKey = String(formData.get("coverImageKey") ?? "").trim() || null;
+  await prisma.book.update({ where: { id }, data: { title, author, description, price, status: statusFor(formData), coverImageKey, ...(storageKey ? { storageKey } : {}) } });
   revalidateBookPaths(id);
 }
 

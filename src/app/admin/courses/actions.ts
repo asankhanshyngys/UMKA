@@ -69,6 +69,8 @@ export async function createCourse(formData: FormData){
     const description =
         formData.get("description") as string;
 
+    const thumbnail = String(formData.get("thumbnail") ?? "").trim() || null;
+
 
     await prisma.course.create({
 
@@ -79,6 +81,8 @@ export async function createCourse(formData: FormData){
             slug,
 
             description,
+
+            thumbnail,
 
             price,
 

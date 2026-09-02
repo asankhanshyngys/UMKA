@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { updatePlatformSettings } from "./actions";
 import { getPlatformSettings } from "@/lib/platform-settings";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 export default async function SettingsPage() {
   const settings = await getPlatformSettings();
@@ -23,9 +24,8 @@ export default async function SettingsPage() {
         <div className="border-t border-border pt-5">
           <h2 className="font-serif text-2xl">Hero media</h2>
           <p className="mt-1 text-sm text-foreground-muted">A photo is the main Hero visual. An optional video URL makes the play button open that video in a new tab.</p>
-          {settings?.heroImageUrl && <img src={settings.heroImageUrl} alt="Current Hero preview" className="mt-4 aspect-video w-full max-w-sm rounded-lg object-cover" />}
           <div className="mt-4 grid gap-4">
-            <label className="block space-y-2"><span className="text-sm font-medium">Hero image URL</span><input name="heroImageUrl" type="url" defaultValue={settings?.heroImageUrl ?? ""} placeholder="https://example.com/hero-image.jpg" className="w-full rounded-lg border border-border bg-background px-3 py-2" /></label>
+            <div className="space-y-2"><span className="text-sm font-medium">Hero image</span><ImageUploadField name="heroImageUrl" defaultValue={settings?.heroImageUrl} label="Hero image" /></div>
             <label className="block space-y-2"><span className="text-sm font-medium">Hero video URL (optional)</span><input name="heroVideoUrl" type="url" defaultValue={settings?.heroVideoUrl ?? ""} placeholder="https://example.com/intro-video" className="w-full rounded-lg border border-border bg-background px-3 py-2" /></label>
           </div>
         </div>

@@ -34,6 +34,8 @@ export async function updateCourse(
     const status =
         formData.get("status") as CourseStatus;
 
+    const thumbnail = String(formData.get("thumbnail") ?? "").trim() || null;
+
 
 
     await prisma.course.update({
@@ -57,6 +59,8 @@ export async function updateCourse(
             difficulty,
 
             status,
+
+            thumbnail,
 
         },
 
