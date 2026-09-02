@@ -15,7 +15,7 @@ function storage() {
   const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
   const bucket = process.env.CLOUDFLARE_R2_IMAGES_BUCKET;
   const publicBaseUrl = process.env.CLOUDFLARE_R2_IMAGES_PUBLIC_URL;
-  const endpoint = process.env.CLOUDFLARE_R2_IMAGES_ENDPOINT ?? (accountId ? `https://${accountId}.r2.cloudflarestorage.com` : undefined);
+  const endpoint = process.env.CLOUDFLARE_R2_IMAGES_ENDPOINT || (accountId ? `https://${accountId}.r2.cloudflarestorage.com` : undefined);
 
   if (!accessKeyId || !secretAccessKey || !bucket || !publicBaseUrl || !endpoint) {
     throw new Error("Cloudflare R2 public image storage is not configured.");

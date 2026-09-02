@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { checkLoginRateLimit, clearLoginRateLimit, getClientIp, recordFailedLogin } from "@/lib/rate-limit";
+import { createToken } from "@/lib/auth";
 
 const DUMMY_PASSWORD_HASH = "$2b$10$wDBktPVZASrj0vGJQqKlruD5DWEQjkQx6Fsg4m3RsfRtxk2W28Qzy";
 
@@ -63,16 +63,7 @@ export async function POST(req: Request) {
         clearLoginRateLimit(rateLimitKey);
 
 
-        const token = jwt.sign(
-            {
-                userId: user.id,
-                role: user.role,
-            },
-            process.env.JWT_SECRET!,
-            {
-                expiresIn: "7d",
-            }
-        );
+        const token = createToken(user.id, user.sessionVersion);
 
 
         const response = NextResponse.json({

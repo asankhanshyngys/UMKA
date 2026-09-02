@@ -25,7 +25,9 @@ export async function TopicCard({ course }: TopicCardProps) {
 
   return (
     <article className="grid overflow-hidden rounded-3xl border border-border bg-card lg:grid-cols-[minmax(250px,0.85fr)_minmax(0,2.15fr)]">
-      <div className="flex min-h-72 flex-col bg-background p-7">
+      <div className="relative flex min-h-72 flex-col overflow-hidden bg-background p-7">
+        {course.thumbnail && <Image src={course.thumbnail} alt="" fill className="object-cover opacity-15" sizes="(max-width: 1024px) 100vw, 30vw" />}
+        <div className="relative z-10 flex h-full flex-1 flex-col">
         <p className="text-xs font-medium uppercase tracking-label text-foreground-subtle">Course collection</p>
         <h3 className="mt-4 font-serif text-3xl leading-tight text-foreground">{course.title}</h3>
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-foreground-muted">{course.description}</p>
@@ -34,6 +36,7 @@ export async function TopicCard({ course }: TopicCardProps) {
           <Link href={`/courses/${course.id}`} className="font-semibold text-accent hover:text-accent-light">
             View course <ArrowUpRight className="inline h-4 w-4" />
           </Link>
+        </div>
         </div>
       </div>
 

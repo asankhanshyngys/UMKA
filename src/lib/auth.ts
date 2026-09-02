@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 interface TokenPayload {
   userId: string;
+  sessionVersion?: number;
 }
 
 function getJwtSecret() {
@@ -17,8 +18,8 @@ function getJwtSecret() {
   return JWT_SECRET;
 }
 
-export function createToken(userId: string) {
-  return jwt.sign({ userId }, getJwtSecret(), { expiresIn: "7d" });
+export function createToken(userId: string, sessionVersion = 0) {
+  return jwt.sign({ userId, sessionVersion }, getJwtSecret(), { expiresIn: "7d" });
 }
 
 export function verifyToken(token: string): TokenPayload | null {
@@ -41,7 +42,11 @@ export const getCurrentUser = cache(async () => {
 
   return prisma.user.findUnique({
     where: { id: payload.userId },
-    select: { id: true, name: true, email: true, role: true, emailVerifiedAt: true },
+    select: { id: true, name: true, email: true, role: true, emailVerifiedAt: true, sessionVersion: true },
+  }).then((user) => {
+    if (!user) return null;
+    if (payload.sessionVersion !== undefined && payload.sessionVersion !== user.sessionVersion) return null;
+    return user;
   });
 });
 

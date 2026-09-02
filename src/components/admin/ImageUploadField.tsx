@@ -42,6 +42,7 @@ export function ImageUploadField({
 
   return (
     <div className="space-y-3">
+      <p className="text-sm font-medium text-foreground">{label}</p>
       <input type="hidden" name={name} value={url} required={required} />
       <div className="flex flex-wrap items-center gap-3">
         <label className="inline-flex cursor-pointer items-center rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-card">

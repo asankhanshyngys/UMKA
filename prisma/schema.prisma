@@ -102,6 +102,8 @@ model User {
 
   role UserRole @default(USER)
 
+  sessionVersion Int @default(0)
+
   subscriptions Subscription[]
 
   coursePurchases CoursePurchase[]
@@ -239,6 +241,8 @@ model Course {
   updatedAt DateTime @updatedAt
 
   deletedAt DateTime?
+
+  @@index([status, deletedAt, createdAt])
 }
 
 // =====================
@@ -275,6 +279,8 @@ model Module {
   updatedAt DateTime @updatedAt
 
   deletedAt DateTime?
+
+  @@index([courseId, deletedAt, order])
 }
 
 // =====================
@@ -317,6 +323,8 @@ model Video {
   updatedAt DateTime @updatedAt
 
   deletedAt DateTime?
+
+  @@index([moduleId, deletedAt, order])
 }
 
 // =====================
@@ -435,6 +443,8 @@ model Subscription {
   user User @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
+
+  @@index([userId, status, expiresAt])
 }
 
 // =====================
@@ -459,6 +469,8 @@ model CoursePurchase {
   course Course @relation(fields: [courseId], references: [id])
 
   createdAt DateTime @default(now())
+
+  @@index([userId, courseId, status, expiresAt])
 }
 
 model ModulePurchase {
@@ -479,6 +491,8 @@ model ModulePurchase {
   module Module @relation(fields: [moduleId], references: [id])
 
   createdAt DateTime @default(now())
+
+  @@index([userId, moduleId, status, expiresAt])
 }
 
 model VideoPurchase {
@@ -499,6 +513,8 @@ model VideoPurchase {
   video Video @relation(fields: [videoId], references: [id])
 
   createdAt DateTime @default(now())
+
+  @@index([userId, videoId, status, expiresAt])
 }
 
 model Book {
@@ -573,6 +589,8 @@ model WatchHistory {
   user User @relation(fields: [userId], references: [id])
 
   video Video @relation(fields: [videoId], references: [id])
+
+  @@index([userId, watchedAt])
 }
 
 // =====================
@@ -591,6 +609,8 @@ model Certificate {
   user User @relation(fields: [userId], references: [id])
 
   course Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
 }
 
 // =====================
@@ -642,6 +662,8 @@ model Payment {
   createdAt DateTime @default(now())
 
   @@index([userId, status])
+  @@index([createdAt, status])
+  @@index([provider, transactionId])
 }
 
 // =====================
@@ -682,4 +704,7 @@ model Event {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
 }

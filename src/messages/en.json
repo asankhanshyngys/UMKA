@@ -135,6 +135,19 @@
     "eyebrow": "Course",
     "unlockDescription": "Complete each lesson's practice to unlock the next lesson."
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This page may have been removed or the link may be outdated.",
+    "home": "Go to home",
+    "courses": "Course catalog"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "We couldn't load this page. Please try again or return to the home page.",
+    "retry": "Try again",
+    "home": "Go to home",
+    "supportCode": "Support code: {code}"
+  },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light mode",

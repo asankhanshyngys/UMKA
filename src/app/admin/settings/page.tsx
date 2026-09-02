@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { updatePlatformSettings } from "./actions";
 import { getPlatformSettings } from "@/lib/platform-settings";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";

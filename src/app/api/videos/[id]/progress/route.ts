@@ -19,9 +19,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     ]);
     if (!hasLessonAccess({ isAdmin: false, hasSubscription: Boolean(subscription), hasCoursePurchase: Boolean(coursePurchase), hasModulePurchase: Boolean(modulePurchase), hasVideoPurchase: Boolean(videoPurchase) })) return NextResponse.json({ error: "Lesson access required." }, { status: 403 });
   }
-  const body = await request.json().catch(() => ({})) as { position?: unknown; completed?: unknown };
-  const position = typeof body.position === "number" && Number.isFinite(body.position) ? Math.max(0, Math.min(Math.round(body.position), video.duration)) : video.duration;
-  const completed = body.completed === true;
+  const body = await request.json().catch(() => null) as { position?: unknown } | null;
+  if (typeof body?.position !== "number" || !Number.isFinite(body.position) || body.position < 0 || body.position > video.duration + 5) {
+    return NextResponse.json({ error: "Position must be a valid value within the lesson duration." }, { status: 400 });
+  }
+  const position = Math.max(0, Math.min(Math.round(body.position), video.duration));
+  const completed = video.duration > 0 && position >= Math.ceil(video.duration * 0.9);
   await prisma.videoProgress.upsert({ where: { userId_videoId: { userId: user.id, videoId: video.id } }, update: { lastPosition: position, completed }, create: { userId: user.id, videoId: video.id, lastPosition: position, completed } });
   return NextResponse.json({ completed });
 }

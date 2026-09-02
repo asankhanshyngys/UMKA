@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { LessonPractice, type LessonPracticeData } from "./LessonPractice";
+import dynamic from "next/dynamic";
+import type { LessonPracticeData } from "./LessonPractice";
 import { isLessonLocked } from "@/lib/learning";
+
+const LessonPractice = dynamic(() => import("./LessonPractice").then((module) => module.LessonPractice), {
+  ssr: false,
+  loading: () => <div className="mt-6 h-32 animate-pulse rounded-2xl bg-card ring-1 ring-border" />,
+});
 
 export type LocalLesson = {
   id: string;
@@ -55,7 +61,16 @@ export function LocalLessonPlayer({ lessons, completedPracticeIds }: { lessons: 
   }
 
   async function markVideoComplete(videoId: string, duration: number) {
-    await fetch(`/api/videos/${videoId}/progress`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ completed: true, position: duration }) }).catch(() => undefined);
+    const payload = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ position: duration }), cache: "no-store" as RequestCache };
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await fetch(`/api/videos/${videoId}/progress`, payload);
+        if (response.ok) return;
+      } catch {
+        // A transient mobile-network failure should not interrupt the lesson.
+      }
+      if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 500));
+    }
   }
 
   if (!activeLesson) return <p className="rounded-2xl border border-dashed border-border p-8 text-foreground-muted">No lessons in this course yet.</p>;

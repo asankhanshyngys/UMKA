@@ -13,6 +13,7 @@ const globalForRateLimit = globalThis as typeof globalThis & {
 };
 
 const loginRateLimitStore = globalForRateLimit.loginRateLimitStore ?? new Map<string, RateLimitEntry>();
+const endpointStores = new Map<string, RateLimitStore>();
 
 if (process.env.NODE_ENV !== "production") {
   globalForRateLimit.loginRateLimitStore = loginRateLimitStore;
@@ -55,4 +56,18 @@ export function recordFailedLogin(key: string) {
 
 export function clearLoginRateLimit(key: string) {
   loginRateLimitStore.delete(key);
+}
+
+export function checkEndpointRateLimit(endpoint: string, key: string, maxAttempts: number, windowMs: number) {
+  const store = endpointStores.get(endpoint) ?? new Map<string, RateLimitEntry>();
+  endpointStores.set(endpoint, store);
+  const now = Date.now();
+  const entry = store.get(key);
+  if (!entry || entry.resetAt <= now) {
+    store.set(key, { attempts: 1, resetAt: now + windowMs });
+    return { allowed: true as const };
+  }
+  if (entry.attempts >= maxAttempts) return { allowed: false as const, retryAfterSeconds: Math.max(1, Math.ceil((entry.resetAt - now) / 1000)) };
+  entry.attempts += 1;
+  return { allowed: true as const };
 }

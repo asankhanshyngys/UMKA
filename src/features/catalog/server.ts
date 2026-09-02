@@ -1,5 +1,6 @@
 import { assertDatabaseConfigured, prisma } from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 
 export const getPublishedCourses = unstable_cache(async () => {
   assertDatabaseConfigured();
@@ -28,4 +29,4 @@ export const getPublishedCourses = unstable_cache(async () => {
     },
     orderBy: { createdAt: "desc" },
   });
-}, ["published-courses"], { tags: ["courses"], revalidate: 300 });
+}, ["published-courses"], { tags: [CACHE_TAGS.courses], revalidate: 300 });

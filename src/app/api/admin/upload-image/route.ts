@@ -11,6 +11,10 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
     if (!(file instanceof File)) return NextResponse.json({ error: "Choose an image file to upload." }, { status: 400 });
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      return NextResponse.json({ error: "Only PNG, JPEG, and WebP images are allowed." }, { status: 400 });
+    }
+    if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: "Image must be 5 MB or smaller." }, { status: 400 });
 
     const url = await uploadImage(Buffer.from(await file.arrayBuffer()), file.name, file.type);
     return NextResponse.json({ url }, { status: 201 });

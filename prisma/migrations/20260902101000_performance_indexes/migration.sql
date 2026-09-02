@@ -1,0 +1,12 @@
+CREATE INDEX "Course_status_deletedAt_createdAt_idx" ON "Course"("status", "deletedAt", "createdAt");
+CREATE INDEX "Module_courseId_deletedAt_order_idx" ON "Module"("courseId", "deletedAt", "order");
+CREATE INDEX "Video_moduleId_deletedAt_order_idx" ON "Video"("moduleId", "deletedAt", "order");
+CREATE INDEX "Subscription_userId_status_expiresAt_idx" ON "Subscription"("userId", "status", "expiresAt");
+CREATE INDEX "CoursePurchase_userId_courseId_status_expiresAt_idx" ON "CoursePurchase"("userId", "courseId", "status", "expiresAt");
+CREATE INDEX "ModulePurchase_userId_moduleId_status_expiresAt_idx" ON "ModulePurchase"("userId", "moduleId", "status", "expiresAt");
+CREATE INDEX "VideoPurchase_userId_videoId_status_expiresAt_idx" ON "VideoPurchase"("userId", "videoId", "status", "expiresAt");
+CREATE INDEX "WatchHistory_userId_watchedAt_idx" ON "WatchHistory"("userId", "watchedAt");
+CREATE INDEX "Payment_createdAt_status_idx" ON "Payment"("createdAt", "status");
+CREATE INDEX "Payment_provider_transactionId_idx" ON "Payment"("provider", "transactionId");
+CREATE INDEX "Event_userId_createdAt_idx" ON "Event"("userId", "createdAt");
+CREATE INDEX "Event_type_createdAt_idx" ON "Event"("type", "createdAt");
