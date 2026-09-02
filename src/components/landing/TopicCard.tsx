@@ -35,7 +35,7 @@ export async function TopicCard({ course }: TopicCardProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 overflow-x-auto p-5 sm:grid-flow-col sm:grid-cols-none sm:auto-cols-[minmax(230px,1fr)]">
+      <div className="grid gap-4 overflow-x-auto p-5 scroll-px-4 sm:grid-flow-col sm:grid-cols-none sm:auto-cols-[minmax(230px,1fr)] sm:scroll-px-0">
         {course.modules.map((module, index) => (
           <Link key={module.id} href={`/courses/${course.id}`} className="group min-w-0 rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:border-accent/40">
             <div className={`flex aspect-[16/9] items-end rounded-xl p-4 ${thumbnailColors[index % thumbnailColors.length]}`}>

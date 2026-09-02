@@ -42,8 +42,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-background px-6">
-      <div className="absolute right-6 top-6 flex items-center gap-2">
+    <main className="relative flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="absolute right-4 top-6 flex items-center gap-2">
         <LanguageSwitcher />
         <ThemeToggle />
       </div>

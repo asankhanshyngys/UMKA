@@ -1,3 +1,2 @@
-export { TopicHeader } from "./TopicHeader";
-export { VideoItem } from "./VideoItem";
-export { VideoList } from "./VideoList";
+export { LocalLessonPlayer } from "./LocalLessonPlayer";
+export { LessonPractice } from "./LessonPractice";

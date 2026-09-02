@@ -7,7 +7,7 @@ export async function Hero() {
   const t = await getTranslations("hero");
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-20 pt-8">
+    <section className="mx-auto max-w-6xl px-4 pb-20 pt-8 sm:px-0">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="space-y-8">
           <p className="text-xs font-medium uppercase tracking-label text-foreground-subtle">
