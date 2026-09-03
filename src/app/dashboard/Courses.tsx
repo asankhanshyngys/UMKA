@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { getBookCoverUrl } from "@/lib/book-cover";
 
 type Course = {
   id: string;
@@ -41,13 +39,6 @@ type PurchasedModule = {
   progress: StandaloneLesson["progress"];
 };
 
-type PurchasedBook = {
-  id: string;
-  title: string;
-  author: string;
-  coverImageKey: string | null;
-};
-
 type PendingRequest = {
   id: string;
   title: string;
@@ -59,7 +50,6 @@ export default function Courses() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [standaloneLessons, setStandaloneLessons] = useState<StandaloneLesson[]>([]);
   const [purchasedModules, setPurchasedModules] = useState<PurchasedModule[]>([]);
-  const [books, setBooks] = useState<PurchasedBook[]>([]);
   const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -73,7 +63,6 @@ export default function Courses() {
         setCourses(data.courses ?? []);
         setStandaloneLessons(data.standaloneLessons ?? []);
         setPurchasedModules(data.purchasedModules ?? []);
-        setBooks(data.books ?? []);
         setPendingRequests(data.pendingRequests ?? []);
       } catch (loadError) {
         setError(loadError instanceof Error ? loadError.message : t("loadError"));
@@ -96,7 +85,7 @@ export default function Courses() {
         </p>
       )}
 
-      {!isLoading && !error && courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && books.length === 0 && pendingRequests.length === 0 && (
+      {!isLoading && !error && courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && pendingRequests.length === 0 && (
         <div className="mt-5 rounded-2xl border border-border bg-card p-6">
           <h3 className="text-lg font-semibold text-foreground">{t("emptyTitle")}</h3>
           <p className="mt-2 text-foreground-muted">{t("emptyDescription")}</p>
@@ -211,21 +200,6 @@ export default function Courses() {
         </>
       )}
 
-      {!isLoading && !error && books.length > 0 && (
-        <>
-          <h2 className="mt-10 font-serif text-2xl text-foreground">My books</h2>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {books.map((book) => (
-              <Link key={book.id} href={`/books/${book.id}/read`} className="group flex gap-4 rounded-2xl border border-border bg-card p-4 transition-transform hover:-translate-y-0.5">
-                <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-lg bg-background">
-                  {getBookCoverUrl(book) && <Image src={getBookCoverUrl(book)!} alt="" fill className="object-cover" sizes="80px" />}
-                </div>
-                <div><p className="text-xs text-foreground-subtle">Digital book · {book.author}</p><h3 className="mt-1 text-lg font-semibold text-foreground">{book.title}</h3><span className="mt-4 inline-block text-sm font-medium text-accent">Read book →</span></div>
-              </Link>
-            ))}
-          </div>
-        </>
-      )}
     </section>
   );
 }

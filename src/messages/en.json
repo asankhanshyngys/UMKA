@@ -131,6 +131,28 @@
     "signOut": "Sign out",
     "closeMenu": "Close"
   },
+  "account": {
+    "eyebrow": "Account",
+    "title": "My account",
+    "emailVerified": "Email verified",
+    "emailNotVerified": "Email not verified",
+    "purchasesTitle": "My purchases",
+    "course": "Course",
+    "book": "Book",
+    "subscription": "Subscription",
+    "subscriptionUntil": "Subscription active until {date}",
+    "subscriptionInactive": "No active subscription",
+    "emptyDescription": "You do not have any purchases yet. Choose a course or book from the catalog.",
+    "browseCatalog": "Browse catalog",
+    "signOut": "Sign out"
+  },
+  "library": {
+    "eyebrow": "My library",
+    "title": "My books",
+    "read": "Read",
+    "emptyDescription": "You do not have any purchased books yet. Choose a book from the catalog.",
+    "browseBooks": "Browse books"
+  },
   "courseDetail": {
     "backToCatalog": "Back to catalog",
     "fullCourse": "Full course",

@@ -80,7 +80,7 @@ export function Header() {
           )}
         </nav>
       </header>
-      <UserBottomNav user={user} onSignOut={signOut} />
+      <UserBottomNav user={user} />
     </>
   );
 }

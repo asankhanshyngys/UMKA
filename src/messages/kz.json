@@ -131,6 +131,28 @@
     "signOut": "Шығу",
     "closeMenu": "Жабу"
   },
+  "account": {
+    "eyebrow": "Жеке кабинет",
+    "title": "Менің аккаунтым",
+    "emailVerified": "Email расталды",
+    "emailNotVerified": "Email расталмады",
+    "purchasesTitle": "Менің сатып алуларым",
+    "course": "Курс",
+    "book": "Кітап",
+    "subscription": "Жазылым",
+    "subscriptionUntil": "Жазылым {date} дейін белсенді",
+    "subscriptionInactive": "Белсенді жазылым жоқ",
+    "emptyDescription": "Сізде әзірге сатып алулар жоқ. Каталогтан курс немесе кітап таңдаңыз.",
+    "browseCatalog": "Каталогты ашу",
+    "signOut": "Шығу"
+  },
+  "library": {
+    "eyebrow": "Менің кітапханам",
+    "title": "Менің кітаптарым",
+    "read": "Оқу",
+    "emptyDescription": "Сізде әлі сатып алынған кітаптар жоқ. Каталогтан кітап таңдаңыз.",
+    "browseBooks": "Кітаптарды көру"
+  },
   "courseDetail": {
     "backToCatalog": "Каталогқа оралу",
     "fullCourse": "Толық курс",

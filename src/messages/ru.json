@@ -131,6 +131,28 @@
     "signOut": "Выйти",
     "closeMenu": "Закрыть"
   },
+  "account": {
+    "eyebrow": "Личный кабинет",
+    "title": "Мой аккаунт",
+    "emailVerified": "Email подтверждён",
+    "emailNotVerified": "Email не подтверждён",
+    "purchasesTitle": "Мои покупки",
+    "course": "Курс",
+    "book": "Книга",
+    "subscription": "Подписка",
+    "subscriptionUntil": "Подписка активна до {date}",
+    "subscriptionInactive": "Нет активной подписки",
+    "emptyDescription": "У вас пока нет покупок. Выберите курс или книгу в каталоге.",
+    "browseCatalog": "Открыть каталог",
+    "signOut": "Выйти"
+  },
+  "library": {
+    "eyebrow": "Моя библиотека",
+    "title": "Мои книги",
+    "read": "Читать",
+    "emptyDescription": "У вас пока нет купленных книг. Выберите книгу в каталоге.",
+    "browseBooks": "Смотреть книги"
+  },
   "courseDetail": {
     "backToCatalog": "Назад к каталогу",
     "fullCourse": "Полный курс",

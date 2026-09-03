@@ -71,11 +71,6 @@ export async function GET() {
     const completed = practices.map((practice) => moduleResultByPracticeId.get(practice.id)).filter((result): result is { practiceId: string; score: number } => Boolean(result));
     return { id: purchase.module.id, title: purchase.module.title, course: { id: purchase.module.course.id, title: purchase.module.course.title }, expiresAt: purchase.expiresAt, progress: { totalPractices: practices.length, completedPractices: completed.length, averageScore: completed.length === 0 ? null : Math.round(completed.reduce((sum, result) => sum + result.score, 0) / completed.length) } };
   });
-  const books = user.role === "ADMIN" ? [] : await prisma.bookPurchase.findMany({
-    where: { userId: user.id, status: "COMPLETED", book: { deletedAt: null } },
-    select: { book: { select: { id: true, title: true, author: true, coverImageKey: true } } },
-    orderBy: { purchasedAt: "desc" },
-  });
   const pendingPayments = user.role === "ADMIN" ? [] : await prisma.payment.findMany({
     where: { userId: user.id, status: "PENDING", provider: "whatsapp" },
     select: { accessType: true, accessId: true, referenceCode: true },
@@ -94,5 +89,5 @@ export async function GET() {
     ...pendingBooks.map((purchase) => ({ id: purchase.id, title: purchase.book.title, referenceCode: pendingReferenceByAccessId.get(purchase.id) })),
     ...pendingSubscriptions.map((subscription) => ({ id: subscription.id, title: `Subscription: ${subscription.plan.replaceAll("_", " ")}`, referenceCode: pendingReferenceByAccessId.get(subscription.id) })),
   ].filter((request): request is { id: string; title: string; referenceCode: string } => Boolean(request.referenceCode));
-  return NextResponse.json({ courses: coursesWithProgress, standaloneLessons, purchasedModules, books: books.map(({ book }) => book), pendingRequests });
+  return NextResponse.json({ courses: coursesWithProgress, standaloneLessons, purchasedModules, pendingRequests });
 }
