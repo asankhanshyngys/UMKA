@@ -121,7 +121,15 @@
     "analytics": "Аналитика",
     "settings": "Настройки"
   },
-  "nav": { "dashboard": "Главная", "myCourses": "Мои курсы", "catalog": "Каталог", "books": "Книги", "more": "Ещё" },
+  "nav": {
+    "ariaLabel": "Навигация",
+    "home": "Главная",
+    "courses": "Курсы",
+    "cabinet": "Кабинет",
+    "login": "Войти",
+    "signOut": "Выйти",
+    "closeMenu": "Закрыть"
+  },
   "courseDetail": {
     "backToCatalog": "Назад к каталогу",
     "fullCourse": "Полный курс",

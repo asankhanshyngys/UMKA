@@ -10,8 +10,6 @@ import type { CatalogBook } from "@/features/books/server";
 import type { CatalogCourse } from "@/features/catalog/types";
 import { getTranslations } from "next-intl/server";
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   const t = await getTranslations("catalog");
   let courses: CatalogCourse[] = [];
@@ -28,20 +26,22 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <Hero />
-      <div className="px-4 sm:px-6 lg:px-12 xl:px-20 ">
-        <hr className="border-border" />
-      </div>
-      {catalogUnavailable ? (
-        <section className="px-4 sm:px-6 lg:px-12 xl:px-20 py-20 ">
-          <p className="text-foreground-muted">{t("unavailable")}</p>
-        </section>
-      ) : (
-        <TopicCatalog courses={courses} />
-      )}
-      <BooksCatalog books={books} />
-      <div className="px-4 sm:px-6 lg:px-12 xl:px-20 "><hr className="border-border" /></div>
-      <SubscriptionPlans plans={subscriptionPlans} />
+      <main className="main-with-mobile-nav">
+        <Hero />
+        <div className="px-4 sm:px-6 lg:px-12 xl:px-20 ">
+          <hr className="border-border" />
+        </div>
+        {catalogUnavailable ? (
+          <section className="px-4 sm:px-6 lg:px-12 xl:px-20 py-20 ">
+            <p className="text-foreground-muted">{t("unavailable")}</p>
+          </section>
+        ) : (
+          <TopicCatalog courses={courses} />
+        )}
+        <BooksCatalog books={books} />
+        <div className="px-4 sm:px-6 lg:px-12 xl:px-20 "><hr className="border-border" /></div>
+        <SubscriptionPlans plans={subscriptionPlans} />
+      </main>
     </div>
   );
 }

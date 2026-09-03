@@ -121,7 +121,15 @@
     "analytics": "Талдау",
     "settings": "Баптаулар"
   },
-  "nav": { "dashboard": "Басты бет", "myCourses": "Курстарым", "catalog": "Каталог", "books": "Кітаптар", "more": "Тағы" },
+  "nav": {
+    "ariaLabel": "Навигация",
+    "home": "Басты бет",
+    "courses": "Курстар",
+    "cabinet": "Кабинет",
+    "login": "Кіру",
+    "signOut": "Шығу",
+    "closeMenu": "Жабу"
+  },
   "courseDetail": {
     "backToCatalog": "Каталогқа оралу",
     "fullCourse": "Толық курс",

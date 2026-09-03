@@ -1,4 +1,6 @@
 import { assertDatabaseConfigured, prisma } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 
 export type CatalogBook = {
   id: string;
@@ -9,14 +11,20 @@ export type CatalogBook = {
   price: number;
 };
 
+const getCachedPublishedBooks = unstable_cache(
+  async (): Promise<CatalogBook[]> => prisma.book.findMany({
+    where: { status: "PUBLISHED", deletedAt: null },
+    select: { id: true, title: true, description: true, author: true, coverImageKey: true, price: true },
+    orderBy: { createdAt: "desc" },
+  }),
+  ["published-books"],
+  { tags: [CACHE_TAGS.books], revalidate: 300 },
+);
+
 export async function getPublishedBooks(): Promise<CatalogBook[]> {
   assertDatabaseConfigured();
   try {
-    return await prisma.book.findMany({
-      where: { status: "PUBLISHED", deletedAt: null },
-      select: { id: true, title: true, description: true, author: true, coverImageKey: true, price: true },
-      orderBy: { createdAt: "desc" },
-    });
+    return await getCachedPublishedBooks();
   } catch (error) {
     // The course storefront should remain usable while a deployment is waiting
     // for the books migration to be applied.

@@ -4,7 +4,8 @@ import { CourseStatus } from "@/generated/prisma/client";
 import { getCurrentAdmin } from "@/lib/auth";
 import { uploadBookObject } from "@/lib/book-storage";
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 
 const MAX_PDF_SIZE = 25 * 1024 * 1024;
 
@@ -50,6 +51,7 @@ function revalidateBookPaths(id?: string) {
     revalidatePath(`/books/${id}`);
     revalidatePath(`/admin/books/${id}`);
   }
+  revalidateTag(CACHE_TAGS.books, { expire: 0 });
 }
 
 export async function createBook(formData: FormData) {

@@ -3,4 +3,5 @@ export const CACHE_TAGS = {
   courses: "courses",
   course: (id: string) => `course:${id}`,
   settings: "settings",
+  books: "books",
 } as const;

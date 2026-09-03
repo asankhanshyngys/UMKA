@@ -57,5 +57,15 @@ body {
   font-family: var(--font-sans-stack);
 }
 
+.main-with-mobile-nav {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 640px) {
+  .main-with-mobile-nav {
+    padding-bottom: 0;
+  }
+}
+
 input, textarea, select { color: var(--foreground); }
 .dark input.bg-white, .dark textarea.bg-white, .dark select.bg-white { background-color: var(--card); }

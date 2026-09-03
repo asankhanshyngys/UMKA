@@ -66,7 +66,7 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="px-4 sm:px-6 lg:px-12 xl:px-20 py-10  sm:py-12">
+      <main className="main-with-mobile-nav px-4 py-10 sm:px-6 sm:py-12 lg:px-12 xl:px-20">
         <Link href="/#catalog" className="inline-flex items-center gap-2 text-sm text-foreground-muted transition-colors hover:text-foreground">
           <ArrowLeft className="h-4 w-4" />
           {t("backToCatalog")}

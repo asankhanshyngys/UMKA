@@ -121,7 +121,15 @@
     "analytics": "Analytics",
     "settings": "Settings"
   },
-  "nav": { "dashboard": "Home", "myCourses": "My courses", "catalog": "Catalog", "books": "Books", "more": "More" },
+  "nav": {
+    "ariaLabel": "Navigation",
+    "home": "Home",
+    "courses": "Courses",
+    "cabinet": "Account",
+    "login": "Sign in",
+    "signOut": "Sign out",
+    "closeMenu": "Close"
+  },
   "courseDetail": {
     "backToCatalog": "Back to catalog",
     "fullCourse": "Full course",
