@@ -8,7 +8,7 @@ const getPublicCourses = unstable_cache(
         where: { status: "PUBLISHED", deletedAt: null },
         select: {
             id: true, title: true, slug: true, description: true, thumbnail: true,
-            price: true, difficulty: true,
+            price: true, oldPrice: true, difficulty: true,
             instructor: { select: { id: true, name: true, bio: true, avatarUrl: true } },
             category: { select: { id: true, name: true, description: true } },
             modules: { select: { id: true, title: true, order: true }, where: { deletedAt: null }, orderBy: { order: "asc" } },

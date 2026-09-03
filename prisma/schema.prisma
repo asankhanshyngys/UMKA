@@ -219,6 +219,8 @@ model Course {
 
   price Int
 
+  oldPrice Int?
+
   difficulty Difficulty
 
   status CourseStatus @default(DRAFT)
@@ -259,6 +261,8 @@ model Module {
   previewImage String?
 
   price Int
+
+  oldPrice Int?
 
   order Int
 
@@ -301,6 +305,8 @@ model Video {
   duration Int
 
   price Int
+
+  oldPrice Int?
 
   order Int
 
@@ -527,6 +533,7 @@ model Book {
   coverImageKey String?
   storageKey String
   price Int
+  oldPrice Int?
   status CourseStatus @default(DRAFT)
 
   purchases BookPurchase[]

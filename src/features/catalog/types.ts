@@ -3,6 +3,7 @@ export type CatalogCourse = {
   title: string;
   description: string;
   price: number;
+  oldPrice: number | null;
   difficulty: string;
   thumbnail: string | null;
   modules: {
@@ -11,6 +12,7 @@ export type CatalogCourse = {
     description: string | null;
     previewImage: string | null;
     price: number;
+    oldPrice: number | null;
     order: number;
     videos: { id: string }[];
   }[];

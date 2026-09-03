@@ -12,6 +12,7 @@ export default async function EditBookPage({ params }: { params: Promise<{ id: s
     <label className="text-sm">Title<input required name="title" defaultValue={book.title} className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
     <label className="text-sm">Author<input required name="author" defaultValue={book.author} className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
     <label className="text-sm">Price, ₸<input required min="0" name="price" type="number" defaultValue={book.price} className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
+    <label className="text-sm">Old price (for a discount, optional)<input min="0" name="oldPrice" type="number" defaultValue={book.oldPrice ?? ""} className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
     <label className="text-sm">Status<select name="status" defaultValue={book.status} className="mt-1 w-full rounded-lg border border-border bg-card p-3"><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option><option value="ARCHIVED">Archived</option></select></label>
     <label className="text-sm md:col-span-2">Description<textarea required name="description" defaultValue={book.description} className="mt-1 min-h-28 w-full rounded-lg border border-border bg-card p-3" /></label>
     <div className="md:col-span-2"><span className="text-sm">Cover image</span><ImageUploadField name="coverImageKey" defaultValue={book.coverImageKey} label="Book cover" /></div>

@@ -25,6 +25,8 @@ export async function updateCourse(
 
     const price =
         Number(formData.get("price"));
+    const oldPriceValue = String(formData.get("oldPrice") ?? "").trim();
+    const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
 
 
     const difficulty =
@@ -55,6 +57,8 @@ export async function updateCourse(
             description,
 
             price,
+
+            oldPrice,
 
             difficulty,
 

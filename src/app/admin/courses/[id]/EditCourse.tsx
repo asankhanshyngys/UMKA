@@ -42,6 +42,15 @@ export default function EditCourse({
                 className="border p-2 block"
             />
 
+            <input
+                name="oldPrice"
+                type="number"
+                min="0"
+                defaultValue={course.oldPrice ?? ""}
+                placeholder="Старая цена (для скидки, необязательно)"
+                className="border p-2 block"
+            />
+
 
             <select
                 name="difficulty"
@@ -84,14 +93,14 @@ export default function EditCourse({
 
 
             <button
-                className="bg-black text-white px-5 py-2 rounded"
+                className="min-h-11 bg-black px-5 py-3 text-white rounded"
             >
                 Save changes
             </button>
 
             <Link
                 href={`/admin/courses/${course.id}/content`}
-                className="inline-block bg-blue-600 text-white px-5 py-2 rounded"
+                className="inline-flex min-h-11 items-center bg-blue-600 px-5 py-3 text-white rounded"
             >
                 Manage Content
             </Link>

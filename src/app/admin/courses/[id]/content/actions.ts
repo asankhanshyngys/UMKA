@@ -19,6 +19,8 @@ export async function createModule(
 
     const price =
         Number(formData.get("price"));
+    const oldPriceValue = String(formData.get("oldPrice") ?? "").trim();
+    const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
 
 
     const lastModule =
@@ -48,6 +50,8 @@ export async function createModule(
             description,
 
             price,
+
+            oldPrice,
 
             order,
 

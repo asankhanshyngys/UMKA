@@ -1,9 +1,10 @@
 import { BarChart3, CreditCard, GraduationCap, RefreshCw, Users } from "lucide-react";
 import { PaymentStatus, SubscriptionStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { DailySalesChart } from "./DailySalesChart";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const formatTenge = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+const formatTenge = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 });
 
 function startOfDay(date: Date) {
   const result = new Date(date);
@@ -12,7 +13,7 @@ function startOfDay(date: Date) {
 }
 
 function percentageChange(current: number, previous: number) {
-  if (previous === 0) return current === 0 ? "0%" : "New";
+  if (previous === 0) return current === 0 ? "0%" : "Новый";
   const change = Math.round(((current - previous) / previous) * 100);
   return `${change >= 0 ? "+" : ""}${change}%`;
 }
@@ -58,27 +59,27 @@ export default async function AnalyticsPage() {
   const dailySales = Array.from({ length: 30 }, (_, index) => {
     const date = new Date(periodStart.getTime() + index * DAY_MS);
     const revenue = sales.filter((payment) => startOfDay(payment.createdAt).getTime() === date.getTime()).reduce((sum, payment) => sum + payment.amount, 0);
-    return { label: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }), revenue };
+    return { label: date.toLocaleDateString("ru-RU", { month: "short", day: "numeric" }), revenue };
   });
 
   const salesByType = ["COURSE", "MODULE", "VIDEO", "SUBSCRIPTION"].map((type) => ({
-    type: type.charAt(0) + type.slice(1).toLowerCase(),
+    type: ({ COURSE: "Курс", MODULE: "Модуль", VIDEO: "Урок", SUBSCRIPTION: "Подписка" } as Record<string, string>)[type],
     revenue: sales.filter((payment) => payment.accessType === type).reduce((sum, payment) => sum + payment.amount, 0),
     orders: sales.filter((payment) => payment.accessType === type).length,
   })).filter((item) => item.orders > 0);
 
   const metrics = [
-    { label: "Net revenue", value: `${formatTenge.format(netRevenue)} ₸`, detail: `${percentageChange(grossRevenue, previousRevenue)} gross sales vs previous 30 days`, icon: CreditCard },
-    { label: "Orders", value: String(sales.length), detail: `Average order: ${formatTenge.format(sales.length ? Math.round(grossRevenue / sales.length) : 0)} ₸`, icon: BarChart3 },
-    { label: "New-customer conversion", value: `${conversionRate}%`, detail: `${newCustomerCount} of ${users.length} new accounts purchased`, icon: Users },
-    { label: "Learning completion", value: `${completionRate}%`, detail: `${completedVideos} completed video records`, icon: GraduationCap },
+    { label: "Чистая выручка", value: `${formatTenge.format(netRevenue)} ₸`, detail: `${percentageChange(grossRevenue, previousRevenue)} валовых продаж к предыдущим 30 дням`, icon: CreditCard },
+    { label: "Заказы", value: String(sales.length), detail: `Средний заказ: ${formatTenge.format(sales.length ? Math.round(grossRevenue / sales.length) : 0)} ₸`, icon: BarChart3 },
+    { label: "Конверсия новых пользователей", value: `${conversionRate}%`, detail: `Купили ${newCustomerCount} из ${users.length} новых аккаунтов`, icon: Users },
+    { label: "Завершение обучения", value: `${completionRate}%`, detail: `Завершённых видео: ${completedVideos}`, icon: GraduationCap },
   ];
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-        <div><p className="text-sm text-foreground-subtle">Last 30 days</p><h1 className="mt-1 font-serif text-4xl">Analytics</h1><p className="mt-3 text-foreground-muted">Sales, refunds, customer conversion, and learning engagement.</p></div>
-        <p className="text-sm text-foreground-muted">{totalUsers} registered learners · {activeSubscriptions} active subscriptions</p>
+        <div><p className="text-sm text-foreground-subtle">Последние 30 дней</p><h1 className="mt-1 font-serif text-4xl">Аналитика</h1><p className="mt-3 text-foreground-muted">Продажи, возвраты, конверсия и вовлечённость в обучение.</p></div>
+        <p className="text-sm text-foreground-muted">{totalUsers} зарегистрированных учеников · {activeSubscriptions} активных подписок</p>
       </div>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -86,16 +87,13 @@ export default async function AnalyticsPage() {
       </section>
 
       <section className="rounded-2xl border border-border bg-card p-6">
-        <div className="flex items-center justify-between"><div><h2 className="font-serif text-2xl">Daily sales</h2><p className="mt-1 text-sm text-foreground-muted">Gross paid sales by checkout date.</p></div><p className="text-sm text-foreground-muted">{formatTenge.format(grossRevenue)} ₸ total</p></div>
-        <div className="mt-8 flex h-52 items-end gap-1" aria-label="Daily sales chart">
-          {dailySales.map((day) => <div key={day.label} className="group relative flex h-full flex-1 items-end"><div className="w-full rounded-t bg-accent/80 transition-colors group-hover:bg-accent" style={{ height: `${Math.max(day.revenue ? 4 : 0, (day.revenue / maxDailyRevenue) * 100)}%` }} title={`${day.label}: ${formatTenge.format(day.revenue)} ₸`} /><span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-foreground px-2 py-1 text-xs text-background group-hover:block">{day.label}: {formatTenge.format(day.revenue)} ₸</span></div>)}
-        </div>
-        <div className="mt-2 flex justify-between text-xs text-foreground-subtle"><span>{dailySales[0]?.label}</span><span>{dailySales.at(-1)?.label}</span></div>
+        <div className="flex items-center justify-between"><div><h2 className="font-serif text-2xl">Продажи по дням</h2><p className="mt-1 text-sm text-foreground-muted">Валовые оплаченные продажи по дате оформления.</p></div><p className="text-sm text-foreground-muted">{formatTenge.format(grossRevenue)} ₸ всего</p></div>
+        <DailySalesChart dailySales={dailySales} maxDailyRevenue={maxDailyRevenue} />
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border border-border bg-card p-6"><h2 className="font-serif text-2xl">Sales by product</h2><div className="mt-5 space-y-4">{salesByType.length === 0 ? <p className="text-sm text-foreground-muted">No sales in this period.</p> : salesByType.map((item) => <div key={item.type} className="flex items-center justify-between"><div><p className="font-medium">{item.type}</p><p className="text-sm text-foreground-muted">{item.orders} orders</p></div><p className="font-medium">{formatTenge.format(item.revenue)} ₸</p></div>)}</div></article>
-        <article className="rounded-2xl border border-border bg-card p-6"><div className="flex items-center gap-2"><RefreshCw className="h-5 w-5 text-accent" /><h2 className="font-serif text-2xl">Refund health</h2></div><p className="mt-5 text-3xl font-semibold">{formatTenge.format(refundedAmount)} ₸</p><p className="mt-1 text-sm text-foreground-muted">{refunds.length} refunds issued in the last 30 days.</p><p className="mt-5 text-sm text-foreground-muted">Refund rate: {sales.length === 0 ? 0 : Math.round((refunds.length / sales.length) * 1000) / 10}% of orders.</p></article>
+        <article className="rounded-2xl border border-border bg-card p-6"><h2 className="font-serif text-2xl">Продажи по товарам</h2><div className="mt-5 space-y-4">{salesByType.length === 0 ? <p className="text-sm text-foreground-muted">За этот период продаж не было.</p> : salesByType.map((item) => <div key={item.type} className="flex items-center justify-between"><div><p className="font-medium">{item.type}</p><p className="text-sm text-foreground-muted">Заказов: {item.orders}</p></div><p className="font-medium">{formatTenge.format(item.revenue)} ₸</p></div>)}</div></article>
+        <article className="rounded-2xl border border-border bg-card p-6"><div className="flex items-center gap-2"><RefreshCw className="h-5 w-5 text-accent" /><h2 className="font-serif text-2xl">Возвраты</h2></div><p className="mt-5 text-3xl font-semibold">{formatTenge.format(refundedAmount)} ₸</p><p className="mt-1 text-sm text-foreground-muted">Возвратов за последние 30 дней: {refunds.length}.</p><p className="mt-5 text-sm text-foreground-muted">Доля возвратов: {sales.length === 0 ? 0 : Math.round((refunds.length / sales.length) * 1000) / 10}% от заказов.</p></article>
       </section>
     </div>
   );

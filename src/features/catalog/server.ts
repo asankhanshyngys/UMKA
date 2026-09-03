@@ -11,6 +11,7 @@ export const getPublishedCourses = unstable_cache(async () => {
       title: true,
       description: true,
       price: true,
+      oldPrice: true,
       difficulty: true,
       thumbnail: true,
       modules: {
@@ -22,6 +23,7 @@ export const getPublishedCourses = unstable_cache(async () => {
           description: true,
           previewImage: true,
           price: true,
+          oldPrice: true,
           order: true,
           videos: { where: { deletedAt: null }, select: { id: true } },
         },

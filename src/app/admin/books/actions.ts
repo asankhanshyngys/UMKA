@@ -61,10 +61,13 @@ export async function createBook(formData: FormData) {
   const description = requiredText(formData, "description");
   const price = Number(formData.get("price"));
   if (!Number.isSafeInteger(price) || price < 0) throw new Error("Price must be a non-negative whole number.");
+  const oldPriceValue = String(formData.get("oldPrice") ?? "").trim();
+  const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
+  if (oldPrice !== null && (!Number.isSafeInteger(oldPrice) || oldPrice < 0)) throw new Error("Old price must be a non-negative whole number.");
   const storageKey = await uploadedPdf(formData, true);
   const coverImageKey = String(formData.get("coverImageKey") ?? "").trim() || null;
 
-  await prisma.book.create({ data: { title, slug: bookSlug(title), author, description, price, status: statusFor(formData), storageKey: storageKey!, coverImageKey } });
+  await prisma.book.create({ data: { title, slug: bookSlug(title), author, description, price, oldPrice, status: statusFor(formData), storageKey: storageKey!, coverImageKey } });
   revalidateBookPaths();
 }
 
@@ -75,9 +78,12 @@ export async function updateBook(id: string, formData: FormData) {
   const description = requiredText(formData, "description");
   const price = Number(formData.get("price"));
   if (!Number.isSafeInteger(price) || price < 0) throw new Error("Price must be a non-negative whole number.");
+  const oldPriceValue = String(formData.get("oldPrice") ?? "").trim();
+  const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
+  if (oldPrice !== null && (!Number.isSafeInteger(oldPrice) || oldPrice < 0)) throw new Error("Old price must be a non-negative whole number.");
   const storageKey = await uploadedPdf(formData);
   const coverImageKey = String(formData.get("coverImageKey") ?? "").trim() || null;
-  await prisma.book.update({ where: { id }, data: { title, author, description, price, status: statusFor(formData), coverImageKey, ...(storageKey ? { storageKey } : {}) } });
+  await prisma.book.update({ where: { id }, data: { title, author, description, price, oldPrice, status: statusFor(formData), coverImageKey, ...(storageKey ? { storageKey } : {}) } });
   revalidateBookPaths(id);
 }
 

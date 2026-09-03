@@ -14,6 +14,11 @@ function positiveNumber(value: FormDataEntryValue | null, field: string) {
   return number;
 }
 
+function optionalPrice(value: FormDataEntryValue | null, field: string) {
+  if (typeof value !== "string" || !value.trim()) return null;
+  return positiveNumber(value, field);
+}
+
 export async function updateModule(moduleId: string, courseId: string, formData: FormData) {
   await ensureAdmin();
   const title = String(formData.get("title") ?? "").trim();
@@ -26,6 +31,7 @@ export async function updateModule(moduleId: string, courseId: string, formData:
       description: String(formData.get("description") ?? "").trim() || null,
       previewImage: String(formData.get("previewImage") ?? "").trim() || null,
       price: positiveNumber(formData.get("price"), "Price"),
+      oldPrice: optionalPrice(formData.get("oldPrice"), "Old price"),
     },
   });
 
@@ -49,6 +55,7 @@ export async function createVideo(moduleId: string, courseId: string, formData: 
       previewImage: String(formData.get("previewImage") ?? "").trim() || null,
       duration: positiveNumber(formData.get("duration"), "Duration"),
       price: positiveNumber(formData.get("price"), "Price"),
+      oldPrice: optionalPrice(formData.get("oldPrice"), "Old price"),
       isFreePreview: formData.get("isFreePreview") === "on",
       order: (previous?.order ?? 0) + 1,
       moduleId,
@@ -75,6 +82,7 @@ export async function updateVideo(videoId: string, moduleId: string, courseId: s
       previewImage: String(formData.get("previewImage") ?? "").trim() || null,
       duration: positiveNumber(formData.get("duration"), "Duration"),
       price: positiveNumber(formData.get("price"), "Price"),
+      oldPrice: optionalPrice(formData.get("oldPrice"), "Old price"),
       isFreePreview: formData.get("isFreePreview") === "on",
     },
   });

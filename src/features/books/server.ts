@@ -9,12 +9,13 @@ export type CatalogBook = {
   author: string;
   coverImageKey: string | null;
   price: number;
+  oldPrice: number | null;
 };
 
 const getCachedPublishedBooks = unstable_cache(
   async (): Promise<CatalogBook[]> => prisma.book.findMany({
     where: { status: "PUBLISHED", deletedAt: null },
-    select: { id: true, title: true, description: true, author: true, coverImageKey: true, price: true },
+    select: { id: true, title: true, description: true, author: true, coverImageKey: true, price: true, oldPrice: true },
     orderBy: { createdAt: "desc" },
   }),
   ["published-books"],

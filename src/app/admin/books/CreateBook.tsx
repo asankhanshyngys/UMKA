@@ -7,6 +7,7 @@ export function CreateBook() {
       <label className="text-sm">Title<input required name="title" className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
       <label className="text-sm">Author<input required name="author" className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
       <label className="text-sm">Price, ₸<input required min="0" name="price" type="number" className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
+      <label className="text-sm">Old price (for a discount, optional)<input min="0" name="oldPrice" type="number" className="mt-1 w-full rounded-lg border border-border bg-card p-3" /></label>
       <label className="text-sm">Status<select name="status" className="mt-1 w-full rounded-lg border border-border bg-card p-3"><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option></select></label>
       <label className="text-sm md:col-span-2">Description<textarea required name="description" className="mt-1 min-h-24 w-full rounded-lg border border-border bg-card p-3" /></label>
       <div className="md:col-span-2"><span className="text-sm">Cover image</span><ImageUploadField name="coverImageKey" label="Book cover" /></div>

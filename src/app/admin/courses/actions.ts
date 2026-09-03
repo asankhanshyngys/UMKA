@@ -44,6 +44,8 @@ export async function createCourse(formData: FormData){
     const price = Number(
         formData.get("price")
     );
+    const oldPriceValue = String(formData.get("oldPrice") ?? "").trim();
+    const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
 
 
     const instructorId =
@@ -85,6 +87,8 @@ export async function createCourse(formData: FormData){
             thumbnail,
 
             price,
+
+            oldPrice,
 
             difficulty,
 
