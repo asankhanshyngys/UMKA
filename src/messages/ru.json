@@ -16,6 +16,7 @@
   "header": {
     "subscriptions": "Подписки",
     "courses": "Курсы",
+    "books": "Книги",
     "login": "Войти",
     "register": "Регистрация",
     "signOut": "Выйти",

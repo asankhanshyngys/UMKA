@@ -16,6 +16,7 @@
   "header": {
     "subscriptions": "Жазылымдар",
     "courses": "Курстар",
+    "books": "Кітаптар",
     "login": "Кіру",
     "register": "Тіркелу",
     "signOut": "Шығу",

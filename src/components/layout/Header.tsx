@@ -20,7 +20,7 @@ export async function Header() {
 
   return (
     <>
-      <header className="relative flex items-center justify-between px-4 py-6 sm:px-6 lg:px-12 xl:px-20">
+      <header className="relative flex items-center justify-between border-b border-border bg-card px-4 py-6 sm:px-6 lg:px-12 xl:px-20">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
             <span className="font-serif text-lg font-medium text-white">U</span>
@@ -35,7 +35,7 @@ export async function Header() {
             {t("courses")}
           </Link>
           <Link href="/books" className="hidden text-sm text-foreground-muted transition-colors hover:text-foreground sm:inline">
-            Books
+            {t("books")}
           </Link>
           {instagramUrl && (
             <a

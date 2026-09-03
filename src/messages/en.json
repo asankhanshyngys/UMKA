@@ -16,6 +16,7 @@
   "header": {
     "subscriptions": "Subscriptions",
     "courses": "Courses",
+    "books": "Books",
     "login": "Sign in",
     "register": "Sign up",
     "signOut": "Sign out",
