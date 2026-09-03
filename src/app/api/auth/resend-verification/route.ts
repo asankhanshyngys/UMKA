@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { checkEndpointRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
-  const limit = checkEndpointRateLimit("resend-verification", getClientIp(request), 3, 60 * 60 * 1000);
+  const limit = await checkEndpointRateLimit("resend-verification", getClientIp(request), 3, 60 * 60 * 1000);
   if (!limit.allowed) return NextResponse.json({ message: "If verification is needed, a fresh link will be sent shortly." }, { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } });
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Authentication required." }, { status: 401 });

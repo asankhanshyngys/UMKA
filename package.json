@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/learning.test.js"
+    "test": "tsc -p tsconfig.test.json && node --test .test-dist/tests/*.test.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1124.0",

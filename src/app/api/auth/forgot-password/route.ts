@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { checkEndpointRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
-  const limit = checkEndpointRateLimit("forgot-password", getClientIp(request), 5, 60 * 60 * 1000);
+  const limit = await checkEndpointRateLimit("forgot-password", getClientIp(request), 5, 60 * 60 * 1000);
   if (!limit.allowed) return NextResponse.json({ message: "If an account exists for this email, a reset link has been sent." });
   const body = await request.json().catch(() => null) as { email?: unknown } | null;
   if (typeof body?.email !== "string") return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });

@@ -9,7 +9,7 @@ import { checkEndpointRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
 
-    const limit = checkEndpointRateLimit("register", getClientIp(request), 10, 60 * 60 * 1000);
+    const limit = await checkEndpointRateLimit("register", getClientIp(request), 10, 60 * 60 * 1000);
     if (!limit.allowed) return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } });
 
     try {

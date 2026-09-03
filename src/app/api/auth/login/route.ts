@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
         const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
         const rateLimitKey = `${getClientIp(req)}:${normalizedEmail}`;
-        const rateLimit = checkLoginRateLimit(rateLimitKey);
+        const rateLimit = await checkLoginRateLimit(rateLimitKey);
 
         if (!rateLimit.allowed) {
             return NextResponse.json(
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         const passwordMatch = await bcrypt.compare(password, user?.password ?? DUMMY_PASSWORD_HASH);
 
         if (!user || !passwordMatch) {
-            recordFailedLogin(rateLimitKey);
+            await recordFailedLogin(rateLimitKey);
             return NextResponse.json(
                 {
                     error: "Invalid credentials",
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
         }
 
 
-        clearLoginRateLimit(rateLimitKey);
+        await clearLoginRateLimit(rateLimitKey);
 
 
         const token = createToken(user.id, user.sessionVersion);
