@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Home, LogIn, UserRound } from "lucide-react";
+import { BookOpen, Home, Library, LogIn, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -26,6 +26,7 @@ export function UserBottomNav({ user, onSignOut }: UserBottomNavProps) {
   const cabinetHref = !user ? "/login" : user.role === "ADMIN" ? "/admin" : "/dashboard";
   const homeActive = pathname === "/";
   const coursesActive = pathname.startsWith("/courses");
+  const booksActive = pathname.startsWith("/books");
   const cabinetActive =
     pathname === "/login" ||
     pathname.startsWith("/dashboard") ||
@@ -41,7 +42,7 @@ export function UserBottomNav({ user, onSignOut }: UserBottomNavProps) {
         aria-label={t("ariaLabel")}
         className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 px-2 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden"
       >
-        <div className="mx-auto grid h-16 max-w-md grid-cols-3 items-center">
+        <div className="mx-auto grid h-16 max-w-md grid-cols-4 items-center">
           <Link
             href="/"
             aria-current={homeActive ? "page" : undefined}
@@ -54,9 +55,23 @@ export function UserBottomNav({ user, onSignOut }: UserBottomNavProps) {
             href="/#catalog"
             aria-current={coursesActive ? "page" : undefined}
             className={`${tabClass} ${coursesActive ? "text-accent" : "text-foreground-muted"}`}
+            onClick={(event) => {
+              if (pathname !== "/") return;
+
+              event.preventDefault();
+              document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+            }}
           >
             <BookOpen className="h-5 w-5" aria-hidden="true" />
             {t("courses")}
+          </Link>
+          <Link
+            href="/books"
+            aria-current={booksActive ? "page" : undefined}
+            className={`${tabClass} ${booksActive ? "text-accent" : "text-foreground-muted"}`}
+          >
+            <Library className="h-5 w-5" aria-hidden="true" />
+            {t("books")}
           </Link>
           {!user ? (
             <Link

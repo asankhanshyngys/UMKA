@@ -3,6 +3,7 @@ import { Hero } from "@/components/landing/Hero";
 import { SubscriptionPlans } from "@/components/landing/SubscriptionPlans";
 import { TopicCatalog } from "@/components/landing/TopicCatalog";
 import { BooksCatalog } from "@/components/landing/BooksCatalog";
+import { CatalogHashScroller } from "@/components/landing/CatalogHashScroller";
 import { subscriptionPlans } from "@/data/mockData";
 import { getPublishedCourses } from "@/features/catalog/server";
 import { getPublishedBooks } from "@/features/books/server";
@@ -26,6 +27,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <CatalogHashScroller />
       <main className="main-with-mobile-nav">
         <Hero />
         <div className="px-4 sm:px-6 lg:px-12 xl:px-20 ">
