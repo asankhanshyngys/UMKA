@@ -76,6 +76,7 @@
     "registerTitle": "Create account",
     "registerSubtitle": "Start learning English at your own pace.",
     "loginFailed": "Could not sign in.",
+    "invalidCredentials": "Incorrect email or password.",
     "registerFailed": "Could not create account.",
     "serverError": "Could not connect to the server. Please try again.",
     "signingIn": "Signing in…",

@@ -36,10 +36,9 @@ export default async function EditCoursePage({
 
 
     return (
+        <div className="space-y-8">
 
-        <div className="p-10">
-
-            <h1 className="text-3xl font-bold">
+            <h1 className="font-serif text-4xl text-foreground">
                 Edit Course
             </h1>
 
@@ -47,28 +46,28 @@ export default async function EditCoursePage({
             <EditCourse
                 course={course}
             />
-            <div className="mt-10">
+            <div className="space-y-5">
 
-            <h2 className="text-2xl font-bold">
+            <h2 className="font-serif text-2xl font-semibold text-foreground">
                 Modules
             </h2>
 
 
-            <div className="mt-5 space-y-3">
+            <div className="space-y-3">
 
                 {course.modules.map(module=>(
 
                     <div
                         key={module.id}
-                        className="border p-4 rounded"
+                        className="rounded-2xl border border-border bg-card p-5"
                     >
 
-                        <h3 className="font-bold">
+                        <h3 className="font-semibold text-foreground">
                             {module.title}
                         </h3>
 
 
-                        <p>
+                        <p className="mt-2 text-sm text-foreground-muted">
                             {module.description}
                         </p>
 

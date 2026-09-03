@@ -27,12 +27,14 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await response.json();
+      const data = (await response.json()) as { error?: string; user?: { role: "USER" | "ADMIN" } };
       if (!response.ok) {
-        setError(data.error ?? t("loginFailed"));
-      } else {
+        setError(response.status === 401 ? t("invalidCredentials") : data.error ?? t("loginFailed"));
+      } else if (data.user) {
         router.push(data.user.role === "ADMIN" ? "/admin" : "/dashboard");
         router.refresh();
+      } else {
+        setError(t("loginFailed"));
       }
     } catch {
       setError(t("serverError"));
