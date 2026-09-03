@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserBottomNav } from "@/components/navigation/UserBottomNav";
+import { InstagramIcon } from "@/components/icons/InstagramIcon";
 
 type User = { name: string; role: "USER" | "ADMIN" };
 
 const navLinkClass =
   "text-sm text-foreground-muted transition-colors hover:text-foreground";
+const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
 
 export function Header() {
   const t = useTranslations("header");
@@ -54,6 +56,17 @@ export function Header() {
           <Link href="/books" className="hidden text-sm text-foreground-muted transition-colors hover:text-foreground sm:inline">
             Books
           </Link>
+          {instagramUrl && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-background hover:text-foreground"
+            >
+              <InstagramIcon className="h-5 w-5" />
+            </a>
+          )}
           <LanguageSwitcher />
           <ThemeToggle />
           {user ? (

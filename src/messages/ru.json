@@ -153,6 +153,26 @@
     "emptyDescription": "У вас пока нет купленных книг. Выберите книгу в каталоге.",
     "browseBooks": "Смотреть книги"
   },
+  "footer": {
+    "description": "Онлайн-платформа для изучения английского в удобном темпе.",
+    "navigation": "Навигация",
+    "about": "О нас",
+    "courses": "Курсы",
+    "books": "Книги",
+    "subscriptions": "Подписки",
+    "contacts": "Контакты",
+    "contactsPage": "Страница контактов",
+    "emailPending": "Email будет добавлен",
+    "whatsappPending": "WhatsApp будет добавлен",
+    "legal": "Юридическая информация",
+    "privacy": "Политика конфиденциальности",
+    "offer": "Публичная оферта",
+    "rights": "Все права защищены.",
+    "aboutPlaceholder": "Здесь будет рассказ о школе — добавьте реальный текст.",
+    "contactsPlaceholder": "Здесь будут контакты школы. Добавьте актуальные email, WhatsApp и адрес.",
+    "address": "Адрес",
+    "addressPending": "Будет добавлен"
+  },
   "courseDetail": {
     "backToCatalog": "Назад к каталогу",
     "fullCourse": "Полный курс",

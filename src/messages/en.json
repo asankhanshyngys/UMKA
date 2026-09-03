@@ -153,6 +153,26 @@
     "emptyDescription": "You do not have any purchased books yet. Choose a book from the catalog.",
     "browseBooks": "Browse books"
   },
+  "footer": {
+    "description": "An online platform for learning English at a comfortable pace.",
+    "navigation": "Navigation",
+    "about": "About us",
+    "courses": "Courses",
+    "books": "Books",
+    "subscriptions": "Subscriptions",
+    "contacts": "Contacts",
+    "contactsPage": "Contact page",
+    "emailPending": "Email will be added",
+    "whatsappPending": "WhatsApp will be added",
+    "legal": "Legal",
+    "privacy": "Privacy policy",
+    "offer": "Public offer",
+    "rights": "All rights reserved.",
+    "aboutPlaceholder": "This is where the school story will go — add the real text.",
+    "contactsPlaceholder": "This is where the school contacts will go. Add the current email, WhatsApp, and address.",
+    "address": "Address",
+    "addressPending": "Will be added"
+  },
   "courseDetail": {
     "backToCatalog": "Back to catalog",
     "fullCourse": "Full course",

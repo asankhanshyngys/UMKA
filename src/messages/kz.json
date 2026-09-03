@@ -153,6 +153,26 @@
     "emptyDescription": "Сізде әлі сатып алынған кітаптар жоқ. Каталогтан кітап таңдаңыз.",
     "browseBooks": "Кітаптарды көру"
   },
+  "footer": {
+    "description": "Ағылшын тілін ыңғайлы қарқынмен үйренуге арналған онлайн-платформа.",
+    "navigation": "Навигация",
+    "about": "Біз туралы",
+    "courses": "Курстар",
+    "books": "Кітаптар",
+    "subscriptions": "Жазылымдар",
+    "contacts": "Байланыстар",
+    "contactsPage": "Байланыстар парағы",
+    "emailPending": "Email кейін қосылады",
+    "whatsappPending": "WhatsApp кейін қосылады",
+    "legal": "Құқықтық ақпарат",
+    "privacy": "Құпиялылық саясаты",
+    "offer": "Жария оферта",
+    "rights": "Барлық құқықтар қорғалған.",
+    "aboutPlaceholder": "Мұнда мектеп туралы әңгіме болады — нақты мәтінді қосыңыз.",
+    "contactsPlaceholder": "Мұнда мектептің байланыстары болады. Нақты email, WhatsApp және мекенжайды қосыңыз.",
+    "address": "Мекенжай",
+    "addressPending": "Кейін қосылады"
+  },
   "courseDetail": {
     "backToCatalog": "Каталогқа оралу",
     "fullCourse": "Толық курс",

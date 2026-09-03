@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { AppProviders } from "@/components/providers/AppProviders";
+import { Footer } from "@/components/layout/Footer";
 import type { Locale } from "@/i18n/routing";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default async function RootLayout({
       <body className="min-h-full bg-background font-sans text-foreground">
         <AppProviders locale={locale} messages={messages}>
           {children}
+          <Footer />
         </AppProviders>
       </body>
     </html>
