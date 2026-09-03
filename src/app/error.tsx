@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import * as Sentry from "@sentry/nextjs";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
@@ -11,6 +12,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 
   useEffect(() => {
     console.error("UMKA application error", error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

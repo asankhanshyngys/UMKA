@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { PaymentAccessType, PaymentStatus, PurchaseStatus, SubscriptionStatus } from "@/generated/prisma/client";
 import { getCurrentAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const accessDuration = 30 * 24 * 60 * 60 * 1000;
 
@@ -26,7 +27,8 @@ export async function confirmPayment(paymentId: string) {
   if (!await getCurrentAdmin()) throw new Error("Unauthorized");
   const now = new Date();
 
-  await prisma.$transaction(async (transaction) => {
+  try {
+    await prisma.$transaction(async (transaction) => {
     const payment = await transaction.payment.findUnique({ where: { id: paymentId } });
     if (!payment || payment.status !== PaymentStatus.PENDING || payment.provider !== "whatsapp") throw new Error("This payment is not awaiting WhatsApp confirmation.");
     if (!payment.accessType || !payment.accessId) throw new Error("The payment has no linked access record.");
@@ -54,7 +56,11 @@ export async function confirmPayment(paymentId: string) {
         await transaction.videoPurchase.updateMany({ where: accessWhere, data: { status: PurchaseStatus.COMPLETED, expiresAt: new Date(now.getTime() + accessDuration) } });
         break;
     }
-  });
+    });
+  } catch (error) {
+    Sentry.captureException(error, { tags: { action: "confirmPayment" } });
+    throw error;
+  }
 
   revalidatePayments();
 }

@@ -10,6 +10,7 @@ import { getPublishedBooks } from "@/features/books/server";
 import type { CatalogBook } from "@/features/books/server";
 import type { CatalogCourse } from "@/features/catalog/types";
 import { getTranslations } from "next-intl/server";
+import * as Sentry from "@sentry/nextjs";
 
 export default async function Home() {
   const t = await getTranslations("catalog");
@@ -21,6 +22,7 @@ export default async function Home() {
     [courses, books] = await Promise.all([getPublishedCourses(), getPublishedBooks()]);
   } catch (error) {
     console.error("Could not load the public course catalog", error);
+    Sentry.captureException(error);
     catalogUnavailable = true;
   }
 
