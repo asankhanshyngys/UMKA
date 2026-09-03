@@ -1,41 +1,22 @@
-"use client";
-
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { getTranslations } from "next-intl/server";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserBottomNav } from "@/components/navigation/UserBottomNav";
 import { InstagramIcon } from "@/components/icons/InstagramIcon";
-
-type User = { name: string; role: "USER" | "ADMIN" };
+import { HeaderUserMenu } from "./HeaderUserMenu";
+import { getCurrentUser } from "@/lib/auth";
 
 const navLinkClass =
   "text-sm text-foreground-muted transition-colors hover:text-foreground";
 const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
 
-export function Header() {
-  const t = useTranslations("header");
-  const tCommon = useTranslations("common");
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    fetch("/api/auth/me")
-      .then(async (response) => (response.ok ? response.json() : null))
-      .then((data) => setUser(data?.user ?? null))
-      .catch(() => setUser(null));
-  }, []);
-
-  async function signOut() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
-    router.push("/");
-    router.refresh();
-  }
-
-  const accountHref = user?.role === "ADMIN" ? "/admin" : "/dashboard";
+export async function Header() {
+  const [t, tCommon, user] = await Promise.all([
+    getTranslations("header"),
+    getTranslations("common"),
+    getCurrentUser(),
+  ]);
 
   return (
     <>
@@ -70,14 +51,7 @@ export function Header() {
           <LanguageSwitcher />
           <ThemeToggle />
           {user ? (
-            <div className="hidden items-center gap-3 sm:flex">
-              <Link href={accountHref} className={navLinkClass}>
-                {user.name}
-              </Link>
-              <button type="button" onClick={signOut} className="text-sm text-foreground-muted underline hover:text-foreground">
-                {t("signOut")}
-              </button>
-            </div>
+            <HeaderUserMenu user={user} />
           ) : (
             <div className="hidden items-center gap-4 sm:flex">
               <Link href="/login" className={navLinkClass}>

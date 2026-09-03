@@ -1,91 +1,20 @@
-"use client";
-
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { getTranslations } from "next-intl/server";
+import type { DashboardCourses } from "@/features/dashboard/server";
 
-type Course = {
-  id: string;
-  title: string;
-  description: string;
-  instructor: { name: string };
-  progress: {
-    totalVideos: number;
-    completedVideos: number;
-    totalPractices: number;
-    completedPractices: number;
-    averageScore: number | null;
-  };
+type CoursesProps = {
+  data: DashboardCourses;
 };
 
-type StandaloneLesson = {
-  id: string;
-  title: string;
-  duration: number;
-  course: { id: string; title: string };
-  expiresAt: string;
-  progress: {
-    totalPractices: number;
-    completedPractices: number;
-    averageScore: number | null;
-  };
-};
-
-type PurchasedModule = {
-  id: string;
-  title: string;
-  course: { id: string; title: string };
-  expiresAt: string;
-  progress: StandaloneLesson["progress"];
-};
-
-type PendingRequest = {
-  id: string;
-  title: string;
-  referenceCode: string;
-};
-
-export default function Courses() {
-  const t = useTranslations("dashboard");
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [standaloneLessons, setStandaloneLessons] = useState<StandaloneLesson[]>([]);
-  const [purchasedModules, setPurchasedModules] = useState<PurchasedModule[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function loadCourses() {
-      try {
-        const response = await fetch("/api/dashboard/courses");
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error ?? t("loadError"));
-        setCourses(data.courses ?? []);
-        setStandaloneLessons(data.standaloneLessons ?? []);
-        setPurchasedModules(data.purchasedModules ?? []);
-        setPendingRequests(data.pendingRequests ?? []);
-      } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : t("loadError"));
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadCourses();
-  }, [t]);
+export default async function Courses({ data }: CoursesProps) {
+  const t = await getTranslations("dashboard");
+  const { courses, standaloneLessons, purchasedModules, pendingRequests } = data;
 
   return (
     <section className="mt-10">
       <h2 className="font-serif text-2xl text-foreground">{t("myCourses")}</h2>
 
-      {isLoading && <p className="mt-4 text-foreground-muted">{t("loading")}</p>}
-
-      {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300">
-          {error}
-        </p>
-      )}
-
-      {!isLoading && !error && courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && pendingRequests.length === 0 && (
+      {courses.length === 0 && standaloneLessons.length === 0 && purchasedModules.length === 0 && pendingRequests.length === 0 && (
         <div className="mt-5 rounded-2xl border border-border bg-card p-6">
           <h3 className="text-lg font-semibold text-foreground">{t("emptyTitle")}</h3>
           <p className="mt-2 text-foreground-muted">{t("emptyDescription")}</p>
@@ -95,7 +24,7 @@ export default function Courses() {
         </div>
       )}
 
-      {!isLoading && !error && pendingRequests.length > 0 && (
+      {pendingRequests.length > 0 && (
         <>
           <h2 className="mt-10 font-serif text-2xl text-foreground">{t("pendingRequests")}</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -109,7 +38,7 @@ export default function Courses() {
         </>
       )}
 
-      {!isLoading && !error && courses.length > 0 && (
+      {courses.length > 0 && (
         <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {courses.map((course) => {
             const percent =
@@ -153,7 +82,7 @@ export default function Courses() {
         </div>
       )}
 
-      {!isLoading && !error && standaloneLessons.length > 0 && (
+      {standaloneLessons.length > 0 && (
         <>
           <h2 className="mt-10 font-serif text-2xl text-foreground">{t("myLessons")}</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -184,7 +113,7 @@ export default function Courses() {
         </>
       )}
 
-      {!isLoading && !error && purchasedModules.length > 0 && (
+      {purchasedModules.length > 0 && (
         <>
           <h2 className="mt-10 font-serif text-2xl text-foreground">My modules</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
