@@ -154,6 +154,23 @@
     "emptyDescription": "You do not have any purchased books yet. Choose a book from the catalog.",
     "browseBooks": "Browse books"
   },
+  "booksCatalog": {
+    "eyebrow": "Digital library",
+    "title": "Books for independent study",
+    "description": "Practical workbooks and guides to keep alongside your course modules.",
+    "digitalBook": "Digital book · {author}",
+    "viewBook": "View book"
+  },
+  "bookDetail": {
+    "digitalBook": "Digital book · {author}",
+    "coverAlt": "Cover of {title}",
+    "permanentAccess": "Permanent access after purchase. Your reading copy is watermarked to help trace accidental sharing; no PDF protection can prevent all copying.",
+    "openReader": "Open reader",
+    "readAfterPurchase": "Read after purchase",
+    "purchaseCopyWatermarked": "Your copy will be watermarked with your account details. This helps trace accidental sharing; it cannot prevent all copying.",
+    "viewingCopyWatermarked": "This viewing copy is watermarked with your account details.",
+    "myLibrary": "My library"
+  },
   "footer": {
     "description": "An online platform for learning English at a comfortable pace.",
     "navigation": "Navigation",
