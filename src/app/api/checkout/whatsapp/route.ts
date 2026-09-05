@@ -101,9 +101,6 @@ async function pendingPayment(userId: string, accessType: PaymentAccessType, acc
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Sign in before checkout." }, { status: 401 });
-  if (user.role !== "ADMIN" && !user.emailVerifiedAt) {
-    return NextResponse.json({ error: "Verify your email address before submitting a payment request." }, { status: 403 });
-  }
 
   let body: CheckoutRequest;
   try {

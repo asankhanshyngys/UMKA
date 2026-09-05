@@ -1,8 +1,14 @@
 import { updatePlatformSettings } from "./actions";
 import { getPlatformSettings } from "@/lib/platform-settings";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { AdminSubmitButton } from "@/components/admin/AdminSubmitButton";
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string }>;
+}) {
+  const { saved } = await searchParams;
   const settings = await getPlatformSettings();
 
   return (
@@ -12,6 +18,12 @@ export default async function SettingsPage() {
         <h1 className="mt-1 font-serif text-4xl">Payments & homepage</h1>
         <p className="mt-3 text-foreground-muted">Configure checkout, subscription prices, and the media shown in the homepage Hero.</p>
       </div>
+
+      {saved === "1" && (
+        <p role="status" className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-200">
+          Настройки сохранены.
+        </p>
+      )}
 
       <form action={updatePlatformSettings} className="space-y-5 rounded-2xl border border-border bg-card p-6">
         <label className="block space-y-2">
@@ -35,7 +47,7 @@ export default async function SettingsPage() {
           <label className="block space-y-2"><span className="text-sm font-medium">6 months, ₸</span><input required name="sixMonthSubscription" type="number" min="0" step="1" defaultValue={settings?.sixMonthSubscription ?? 0} className="w-full rounded-lg border border-border bg-background px-3 py-2" /></label>
         </div>
 
-        <button className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white">Save settings</button>
+        <AdminSubmitButton pendingLabel="Сохраняю настройки…" className="min-h-11 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white">Сохранить настройки</AdminSubmitButton>
       </form>
     </div>
   );

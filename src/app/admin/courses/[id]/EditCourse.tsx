@@ -4,6 +4,7 @@ import { updateCourse } from "./actions";
 import Link from "next/link";
 import type { Course } from "@/generated/prisma/client";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { AdminSubmitButton } from "@/components/admin/AdminSubmitButton";
 
 
 export default function EditCourse({
@@ -20,7 +21,7 @@ export default function EditCourse({
         <label className="text-sm text-foreground">Старая цена (для скидки, необязательно)<input name="oldPrice" type="number" min="0" defaultValue={course.oldPrice ?? ""} className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-foreground" /></label>
         <label className="text-sm text-foreground">Уровень<select name="difficulty" defaultValue={course.difficulty} className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-foreground"><option value="BEGINNER">Начинающий</option><option value="INTERMEDIATE">Средний</option><option value="ADVANCED">Продвинутый</option></select></label>
         <label className="text-sm text-foreground">Статус<select name="status" defaultValue={course.status} className="mt-1 w-full rounded-lg border border-border bg-background p-3 text-foreground"><option value="DRAFT">Черновик</option><option value="PUBLISHED">Опубликован</option></select></label>
-        <div className="flex flex-wrap gap-3 md:col-span-2"><button className="min-h-11 rounded-lg bg-accent px-5 py-3 text-sm font-medium text-white">Сохранить изменения</button><Link href={`/admin/courses/${course.id}/content`} className="inline-flex min-h-11 items-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-foreground hover:bg-background">Управление содержимым</Link></div>
+        <div className="flex flex-wrap gap-3 md:col-span-2"><AdminSubmitButton pendingLabel="Сохраняю изменения…" className="min-h-11 rounded-lg bg-accent px-5 py-3 text-sm font-medium text-white">Сохранить изменения</AdminSubmitButton><Link href={`/admin/courses/${course.id}/content`} className="inline-flex min-h-11 items-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-foreground hover:bg-background">Управление содержимым</Link></div>
     </form>;
 
 }

@@ -16,6 +16,12 @@ enum UserRole {
   ADMIN
 }
 
+enum OAuthProvider {
+  GOOGLE
+  APPLE
+  FACEBOOK
+}
+
 enum CourseStatus {
   DRAFT
   PUBLISHED
@@ -96,6 +102,8 @@ model User {
 
   password String
 
+  oauthAccounts OAuthAccount[]
+
   emailVerifiedAt DateTime?
 
   avatarUrl String?
@@ -130,6 +138,19 @@ model User {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
+
+model OAuthAccount {
+  id String @id @default(uuid())
+  provider OAuthProvider
+  providerAccountId String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 enum PaymentAccessType {

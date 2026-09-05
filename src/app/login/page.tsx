@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
@@ -90,6 +91,7 @@ export default function LoginPage() {
         >
           {isSubmitting ? t("signingIn") : t("signIn")}
         </button>
+        <OAuthButtons />
         <p className="text-center text-sm text-foreground-muted">
           <Link href="/forgot-password" className="text-accent underline">Forgot your password?</Link>
         </p>

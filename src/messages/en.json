@@ -77,6 +77,7 @@
     "registerSubtitle": "Start learning English at your own pace.",
     "loginFailed": "Could not sign in.",
     "invalidCredentials": "Incorrect email or password.",
+    "orContinueWith": "Or continue with",
     "registerFailed": "Could not create account.",
     "serverError": "Could not connect to the server. Please try again.",
     "signingIn": "Signing in…",

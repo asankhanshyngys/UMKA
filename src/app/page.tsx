@@ -4,9 +4,9 @@ import { SubscriptionPlans } from "@/components/landing/SubscriptionPlans";
 import { TopicCatalog } from "@/components/landing/TopicCatalog";
 import { BooksCatalog } from "@/components/landing/BooksCatalog";
 import { CatalogHashScroller } from "@/components/landing/CatalogHashScroller";
-import { subscriptionPlans } from "@/data/mockData";
 import { getPublishedCourses } from "@/features/catalog/server";
 import { getPublishedBooks } from "@/features/books/server";
+import { getSubscriptionPlans } from "@/lib/platform-settings";
 import type { CatalogBook } from "@/features/books/server";
 import type { CatalogCourse } from "@/features/catalog/types";
 import { getTranslations } from "next-intl/server";
@@ -16,6 +16,7 @@ export default async function Home() {
   const t = await getTranslations("catalog");
   let courses: CatalogCourse[] = [];
   let books: CatalogBook[] = [];
+  const subscriptionPlans = await getSubscriptionPlans();
   let catalogUnavailable = false;
 
   try {

@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 import { getCurrentAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getPlatformSettings } from "@/lib/platform-settings";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 
 function parsePrice(value: FormDataEntryValue | null, field: string) {
   const price = Number(value);
@@ -29,5 +31,6 @@ export async function updatePlatformSettings(formData: FormData) {
 
   revalidatePath("/admin/settings");
   revalidatePath("/");
-  revalidateTag("settings", { expire: 0 });
+  revalidateTag(CACHE_TAGS.settings, { expire: 0 });
+  redirect("/admin/settings?saved=1");
 }

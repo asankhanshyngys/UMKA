@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 
 export default function RegisterPage() {
   const t = useTranslations("auth");
@@ -99,6 +100,7 @@ export default function RegisterPage() {
         >
           {isSubmitting ? t("creatingAccount") : t("createAccount")}
         </button>
+        <OAuthButtons />
         <p className="text-center text-sm text-foreground-muted">
           {t("hasAccount")}{" "}
           <Link href="/login" className="text-accent underline">
