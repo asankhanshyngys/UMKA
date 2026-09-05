@@ -7,6 +7,15 @@ datasource db {
   provider = "postgresql"
 }
 
+// Public marketing images, persisted without an external media service.
+model PublicImage {
+  id          String   @id @default(cuid())
+  filename    String
+  contentType String
+  data        Bytes
+  createdAt   DateTime @default(now())
+}
+
 // =====================
 // ENUMS
 // =====================

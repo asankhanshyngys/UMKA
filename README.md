@@ -40,6 +40,8 @@ Never commit `.env` or production API keys. Back up the production database befo
 
 ## Temporary local video testing
 
+For public photos and thumbnails, see **Public image uploads** below.
+
 For development only, copy a small MP4 file to `public/videos/`, for example `public/videos/test-lesson.mp4`. In the admin video form, set **Storage key or video path** to `videos/test-lesson.mp4`. After a learner receives test access, their dashboard opens `/learn/[course-id]` and plays the file.
 
 Files in `public/` are not protected. This local player is only a bridge for testing the learning flow; production lessons must use private streaming with expiring signed playback tokens.
@@ -51,6 +53,12 @@ Files in `public/` are not protected. This local player is only a bridge for tes
 3. In the admin video form, enter the storage key as `cfstream:VIDEO_UID` (for example, `cfstream:abc123`).
 
 The player requests `/api/videos/[id]/playback` only after the user selects a lesson. The route verifies the signed-in learner has a valid subscription or course purchase (or is an admin), then makes a Cloudflare token that expires in five minutes. The Cloudflare credentials are never sent to the browser.
+
+## Public image uploads
+
+Hero photos, course/module/lesson thumbnails, and book covers are uploaded from the administrator's computer and stored in PostgreSQL (`PublicImage`). They are served publicly at `/api/images/[id]`, with immutable caching. Uploading requires an administrator; viewing does not require login or paid access. Cloudflare is not required for these images, and storage survives Vercel deployments.
+
+Apply migrations with `npx prisma migrate deploy` before deploying this version. Existing image URLs remain valid and are not moved. Choose a PNG, JPEG, or WebP file up to 4 MB, wait for the preview, then save the form. The limit leaves room for multipart headers under Vercel's 4.5 MB request limit. Image bytes count toward database storage and backups; this is intended for a modest marketing-image library.
 
 ## Security model
 
