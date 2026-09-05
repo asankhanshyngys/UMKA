@@ -18,6 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("title"),
     description: t("description"),
+    icons: {
+      icon: [
+        {
+          url: "/icon-192.svg",
+          type: "image/svg+xml",
+        },
+      ],
+    },
   };
 }
 
