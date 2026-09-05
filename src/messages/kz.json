@@ -68,6 +68,7 @@
     "checkoutFailed": "Сынақ қол жеткізуді рәсімдеу сәтсіз аяқталды.",
     "serverError": "Серверге қосылу мүмкін болмады.",
     "payViaWhatsApp": "WhatsApp арқылы төлеу",
+    "openWhatsAppManually": "WhatsApp-ты қолмен ашу",
     "whatsappPending": "Өтінім жіберілді, коды {referenceCode}. Төлемді WhatsApp-та растаңыз — менеджер тексерген соң қолжетімділік ашылады.",
     "pendingRequest": "Өтінім жіберілді, коды {referenceCode} · растауды күтіп тұр"
   },

@@ -68,6 +68,7 @@
     "checkoutFailed": "Не удалось оформить тестовый доступ.",
     "serverError": "Не удалось подключиться к серверу.",
     "payViaWhatsApp": "Оплатить через WhatsApp",
+    "openWhatsAppManually": "Открыть WhatsApp вручную",
     "whatsappPending": "Заявка отправлена, код {referenceCode}. Подтвердите оплату в WhatsApp — доступ откроется после проверки менеджером.",
     "pendingRequest": "Заявка отправлена, код {referenceCode} · ожидает подтверждения"
   },

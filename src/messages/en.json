@@ -68,6 +68,7 @@
     "checkoutFailed": "Could not complete test checkout.",
     "serverError": "Could not connect to the server.",
     "payViaWhatsApp": "Pay via WhatsApp",
+    "openWhatsAppManually": "Open WhatsApp manually",
     "whatsappPending": "Request sent, code {referenceCode}. Confirm payment in WhatsApp — access will open after the manager verifies it.",
     "pendingRequest": "Request sent, code {referenceCode} · awaiting confirmation"
   },
