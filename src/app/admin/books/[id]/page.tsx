@@ -1,3 +1,4 @@
+import { AdminSubmitButton } from "@/components/admin/AdminSubmitButton";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateBook } from "../actions";
@@ -18,6 +19,6 @@ export default async function EditBookPage({ params }: { params: Promise<{ id: s
     <div className="md:col-span-2"><span className="text-sm">Cover image</span><ImageUploadField name="coverImageKey" defaultValue={book.coverImageKey} label="Book cover" /></div>
     <label className="text-sm md:col-span-2">Replace protected PDF (25 MB max)<input name="pdf" type="file" accept="application/pdf" className="mt-1 block w-full text-sm" /></label>
     <p className="text-sm text-foreground-muted md:col-span-2">The existing protected PDF remains in use until you upload a replacement.</p>
-    <button className="w-fit rounded-lg bg-accent px-5 py-3 text-sm font-medium text-white">Save book</button>
+    <AdminSubmitButton pendingLabel="Saving…" className="w-fit rounded-lg bg-accent px-5 py-3 text-sm font-medium text-white">Save book</AdminSubmitButton>
   </form></div>;
 }

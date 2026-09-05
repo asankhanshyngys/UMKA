@@ -69,3 +69,40 @@ body {
 
 input, textarea, select { color: var(--foreground); }
 .dark input.bg-white, .dark textarea.bg-white, .dark select.bg-white { background-color: var(--card); }
+
+@layer base {
+  :where(button, [role="button"], .pressable) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgb(61 107 96 / 22%);
+    transition: scale 120ms ease, filter 120ms ease, background-color 120ms ease;
+  }
+
+  :where(button, [role="button"], .pressable):not(:disabled):not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :where(button, [role="button"], .pressable):not(:disabled):not([aria-disabled="true"]):active {
+    scale: 0.97;
+    filter: brightness(0.85);
+  }
+
+  :where(button, [role="button"], .pressable):focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 3px;
+  }
+
+  button:disabled { cursor: not-allowed; }
+  button[aria-busy="true"] { cursor: wait; }
+
+  @media (pointer: coarse) {
+    :where(button, [role="button"], .pressable) {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(button, [role="button"], .pressable) { transition: none; }
+    :where(button, [role="button"], .pressable):active { scale: none; }
+  }
+}

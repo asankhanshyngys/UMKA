@@ -12,7 +12,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-medium transition-colors";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-medium disabled:opacity-60";
 
   const variants = {
     primary: "bg-accent text-white hover:bg-accent-dark",

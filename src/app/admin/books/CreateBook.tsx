@@ -1,3 +1,4 @@
+import { AdminSubmitButton } from "@/components/admin/AdminSubmitButton";
 import { createBook } from "./actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
@@ -13,7 +14,7 @@ export function CreateBook() {
       <div className="md:col-span-2"><span className="text-sm">Cover image</span><ImageUploadField name="coverImageKey" label="Book cover" /></div>
       <label className="text-sm md:col-span-2">Protected PDF (25 MB max)<input required name="pdf" type="file" accept="application/pdf" className="mt-1 block w-full text-sm" /></label>
       <p className="text-sm text-foreground-muted md:col-span-2">The original files are stored in a private R2 bucket. Buyers receive a fresh, watermarked PDF viewer copy after access is confirmed.</p>
-      <button className="w-fit rounded-lg bg-accent px-5 py-3 text-sm font-medium text-white">Create book</button>
+      <AdminSubmitButton pendingLabel="Adding…" className="w-fit rounded-lg bg-accent px-5 py-3 text-sm font-medium text-white">Create book</AdminSubmitButton>
     </form>
   );
 }

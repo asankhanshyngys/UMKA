@@ -55,7 +55,7 @@ export function ImageUploadField({
       <p className="text-sm font-medium text-foreground">{label}</p>
       <input type="hidden" name={name} value={url} required={required} />
       <div className="flex flex-wrap items-center gap-3">
-        <label className="inline-flex cursor-pointer items-center rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-card">
+        <label aria-disabled={isUploading} className="pressable inline-flex cursor-pointer items-center rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium hover:bg-card focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent">
           <span>{isUploading ? "Uploading…" : "Choose image"}</span>
           <input type="file" accept="image/png,image/jpeg,image/webp" onChange={upload} disabled={isUploading} className="sr-only" />
         </label>
